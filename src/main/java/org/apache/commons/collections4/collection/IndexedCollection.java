@@ -18,6 +18,9 @@ package org.apache.commons.collections4.collection;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.MultiMap;
 import org.apache.commons.collections4.Transformer;
@@ -30,10 +33,12 @@ import org.apache.commons.collections4.map.MultiValueMap;
  * Modifications made to this decorator modify the index as well as the
  * decorated {@link Collection}. However, modifications to the underlying
  * {@link Collection} will not update the index and it will get out of sync.
+ * </p>
  * <p>
  * If modification of the decorated {@link Collection} is unavoidable, then a
  * call to {@link #reindex()} will update the index to the current contents of
  * the {@link Collection}.
+ * </p>
  *
  * @param <K> the type of object in the index.
  * @param <C> the type of object in the collection.
@@ -210,6 +215,28 @@ public class IndexedCollection<K, C> extends AbstractCollectionDecorator<C> {
             removeFromIndex((C) object);
         }
         return removed;
+    }
+
+    /**
+     * @since 4.4
+     */
+    @Override
+    public boolean removeIf(final Predicate<? super C> filter) {
+        if (Objects.isNull(filter)) {
+            return false;
+        }
+        boolean changed = false;
+        final Iterator<C> it = iterator();
+        while (it.hasNext()) {
+            if (filter.test(it.next())) {
+                it.remove();
+                changed = true;
+            }
+        }
+        if (changed) {
+            reindex();
+        }
+        return changed;
     }
 
     @Override

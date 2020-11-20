@@ -17,9 +17,10 @@
 package org.apache.commons.collections4;
 
 /**
- * Defines an iterator that operates over an ordered <code>Map</code>.
+ * Defines an iterator that operates over an ordered {@code Map}.
  * <p>
  * This iterator allows both forward and reverse iteration through the map.
+ * </p>
  *
  * @param <K> the type of the keys in the map
  * @param <V> the type of the values in the map
@@ -30,13 +31,13 @@ public interface OrderedMapIterator<K, V> extends MapIterator<K, V>, OrderedIter
     /**
      * Checks to see if there is a previous entry that can be iterated to.
      *
-     * @return <code>true</code> if the iterator has a previous element
+     * @return {@code true} if the iterator has a previous element
      */
     @Override
     boolean hasPrevious();
 
     /**
-     * Gets the previous <em>key</em> from the <code>Map</code>.
+     * Gets the previous <em>key</em> from the {@code Map}.
      *
      * @return the previous key in the iteration
      * @throws java.util.NoSuchElementException if the iteration is finished

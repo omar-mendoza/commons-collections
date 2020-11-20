@@ -22,18 +22,22 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-import junit.framework.TestCase;
 import org.apache.commons.collections4.Predicate;
 import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.list.GrowthList;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests the FilterListIterator class.
  *
  */
 @SuppressWarnings("boxing")
-public class FilterListIteratorTest extends TestCase {
+public class FilterListIteratorTest {
 
     private ArrayList<Integer> list = null;
     private ArrayList<Integer> odds = null;
@@ -49,7 +53,7 @@ public class FilterListIteratorTest extends TestCase {
     private Predicate<Integer> fourPred = null;
     private final Random random = new Random();
 
-    @Override
+    @Before
     public void setUp() {
         list = new ArrayList<>();
         odds = new ArrayList<>();
@@ -59,58 +63,38 @@ public class FilterListIteratorTest extends TestCase {
         sixes = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             list.add(Integer.valueOf(i));
-            if (i % 2 == 0) { evens.add(Integer.valueOf(i)); }
-            if (i % 2 != 0) { odds.add(Integer.valueOf(i)); }
-            if (i % 3 == 0) { threes.add(Integer.valueOf(i)); }
-            if (i % 4 == 0) { fours.add(Integer.valueOf(i)); }
-            if (i % 6 == 0) { sixes.add(Integer.valueOf(i)); }
+            if (i % 2 == 0) {
+                evens.add(Integer.valueOf(i));
+            }
+            if (i % 2 != 0) {
+                odds.add(Integer.valueOf(i));
+            }
+            if (i % 3 == 0) {
+                threes.add(Integer.valueOf(i));
+            }
+            if (i % 4 == 0) {
+                fours.add(Integer.valueOf(i));
+            }
+            if (i % 6 == 0) {
+                sixes.add(Integer.valueOf(i));
+            }
         }
 
-        truePred = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer x) {
-                return true;
-            }
-        };
+        truePred = x -> true;
 
-        falsePred = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer x) {
-                return true;
-            }
-        };
+        falsePred = x -> true;
 
-        evenPred = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer x) {
-                return x % 2 == 0;
-            }
-        };
+        evenPred = x -> x % 2 == 0;
 
-        oddPred = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer x) {
-                return x % 2 != 0; //works for all numbers, not just >= 0 as is the case for "x % 2 == 1"
-            }
-        };
+        oddPred = x -> x % 2 != 0;
 
-        threePred = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer x) {
-                return x % 3 == 0;
-            }
-        };
+        threePred = x -> x % 3 == 0;
 
-        fourPred = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer x) {
-                return x % 4 == 0;
-            }
-        };
+        fourPred = x -> x % 4 == 0;
 
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         list = null;
         odds = null;
@@ -126,11 +110,13 @@ public class FilterListIteratorTest extends TestCase {
         fourPred = null;
     }
 
+    @Test
     public void testWalkLists() {
         // this just confirms that our walkLists method works OK
-        walkLists(list,list.listIterator());
+        walkLists(list, list.listIterator());
     }
 
+    @Test
     public void testManual() {
         // do this one "by hand" as a sanity check
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), threePred);
@@ -190,36 +176,43 @@ public class FilterListIteratorTest extends TestCase {
         assertEquals(Integer.valueOf(9), filtered.previous());
     }
 
+    @Test
     public void testTruePredicate() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), truePred);
         walkLists(list, filtered);
     }
 
+    @Test
     public void testFalsePredicate() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), falsePred);
         walkLists(new ArrayList<Integer>(), filtered);
     }
 
+    @Test
     public void testEvens() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), evenPred);
         walkLists(evens, filtered);
     }
 
+    @Test
     public void testOdds() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), oddPred);
         walkLists(odds, filtered);
     }
 
+    @Test
     public void testThrees() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), threePred);
         walkLists(threes, filtered);
     }
 
+    @Test
     public void testFours() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), fourPred);
         walkLists(fours, filtered);
     }
 
+    @Test
     public void testNestedSixes() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(
                                         new FilterListIterator<>(list.listIterator(), threePred),
@@ -228,6 +221,7 @@ public class FilterListIteratorTest extends TestCase {
         walkLists(sixes, filtered);
     }
 
+    @Test
     public void testNestedSixes2() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(
                                         new FilterListIterator<>(list.listIterator(), evenPred),
@@ -236,6 +230,7 @@ public class FilterListIteratorTest extends TestCase {
         walkLists(sixes, filtered);
     }
 
+    @Test
     public void testNestedSixes3() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(
                                         new FilterListIterator<>(list.listIterator(), threePred),
@@ -244,6 +239,7 @@ public class FilterListIteratorTest extends TestCase {
         walkLists(sixes, new FilterListIterator<>(filtered, truePred));
     }
 
+    @Test
     public void testNextChangesPrevious() {
         {
             final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), threePred);
@@ -256,12 +252,13 @@ public class FilterListIteratorTest extends TestCase {
         }
     }
 
+    @Test
     public void testPreviousChangesNext() {
         {
             final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), threePred);
             final ListIterator<Integer> expected = threes.listIterator();
-            walkForward(expected,filtered);
-            previousPreviousNext(expected,filtered);
+            walkForward(expected, filtered);
+            previousPreviousNext(expected, filtered);
         }
         {
             final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), truePred);
@@ -271,6 +268,7 @@ public class FilterListIteratorTest extends TestCase {
         }
     }
 
+    @Test
     public void testFailingHasNextBug() {
         final FilterListIterator<Integer> filtered = new FilterListIterator<>(list.listIterator(), fourPred);
         final ListIterator<Integer> expected = fours.listIterator();
@@ -286,6 +284,7 @@ public class FilterListIteratorTest extends TestCase {
     /**
      * Test for {@link "https://issues.apache.org/jira/browse/COLLECTIONS-360 COLLECTIONS-360"}
      */
+    @Test
     public void testCollections360() throws Throwable {
         final Collection<Predicate<Object>> var7 = new GrowthList<>();
         final Predicate<Object> var9 = PredicateUtils.anyPredicate(var7);
@@ -348,10 +347,10 @@ public class FilterListIteratorTest extends TestCase {
         final ListIterator<E> expected = list.listIterator();
 
         // walk all the way forward
-        walkForward(expected,testing);
+        walkForward(expected, testing);
 
         // walk all the way back
-        walkBackward(expected,testing);
+        walkBackward(expected, testing);
 
         // forward,back,forward
         while (expected.hasNext()) {

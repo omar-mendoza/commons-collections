@@ -22,6 +22,7 @@ package org.apache.commons.collections4;
  * <p>
  * Implementations should allow a value to be looked up from a key and
  * a key to be looked up from a value with equal performance.
+ * </p>
  *
  * @param <K> the type of the keys in the map
  * @param <V> the type of the values in the map
@@ -37,11 +38,11 @@ public interface OrderedBidiMap<K, V> extends BidiMap<K, V>, OrderedMap<K, V> {
      * This enables both directions of the map to be accessed equally.
      * <p>
      * Implementations should seek to avoid creating a new object every time this
-     * method is called. See <code>AbstractMap.values()</code> etc. Calling this
+     * method is called. See {@code AbstractMap.values()} etc. Calling this
      * method on the inverse map should return the original.
      * <p>
-     * Implementations must return an <code>OrderedBidiMap</code> instance,
-     * usually by forwarding to <code>inverseOrderedBidiMap()</code>.
+     * Implementations must return an {@code OrderedBidiMap} instance,
+     * usually by forwarding to {@code inverseOrderedBidiMap()}.
      *
      * @return an inverted bidirectional map
      */

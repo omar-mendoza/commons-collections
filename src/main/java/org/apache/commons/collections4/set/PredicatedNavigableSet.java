@@ -22,14 +22,16 @@ import java.util.NavigableSet;
 import org.apache.commons.collections4.Predicate;
 
 /**
- * Decorates another <code>NavigableSet</code> to validate that all additions
+ * Decorates another {@code NavigableSet} to validate that all additions
  * match a specified predicate.
  * <p>
  * This set exists to provide validation for the decorated set.
  * It is normally created to decorate an empty set.
  * If an object cannot be added to the set, an IllegalArgumentException is thrown.
+ * </p>
  * <p>
  * One usage would be to ensure that no null entries are added to the set.
+ * </p>
  * <pre>
  * NavigableSet set =
  *   PredicatedSortedSet.predicatedNavigableSet(new TreeSet(),
@@ -132,7 +134,8 @@ public class PredicatedNavigableSet<E> extends PredicatedSortedSet<E> implements
     }
 
     @Override
-    public NavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement, final boolean toInclusive) {
+    public NavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement,
+            final boolean toInclusive) {
         final NavigableSet<E> sub = decorated().subSet(fromElement, fromInclusive, toElement, toInclusive);
         return predicatedNavigableSet(sub, predicate);
     }

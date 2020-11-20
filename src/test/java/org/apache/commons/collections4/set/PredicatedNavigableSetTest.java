@@ -62,12 +62,7 @@ public class PredicatedNavigableSetTest<E> extends AbstractNavigableSetTest<E> {
 
 //--------------------------------------------------------------------
     protected Predicate<E> testPredicate =
-        new Predicate<E>() {
-            @Override
-            public boolean evaluate(final E o) {
-                return o instanceof String && ((String) o).startsWith("A");
-            }
-        };
+        o -> o instanceof String && ((String) o).startsWith("A");
 
     protected PredicatedNavigableSet<E> makeTestSet() {
         return PredicatedNavigableSet.predicatedNavigableSet(new TreeSet<E>(), testPredicate);
@@ -88,8 +83,7 @@ public class PredicatedNavigableSetTest<E> extends AbstractNavigableSetTest<E> {
         } catch (final IllegalArgumentException e) {
             // expected
         }
-        assertTrue("Collection shouldn't contain illegal element",
-         !set.contains(testString));
+        assertTrue("Collection shouldn't contain illegal element", !set.contains(testString));
     }
 
     @SuppressWarnings("unchecked")

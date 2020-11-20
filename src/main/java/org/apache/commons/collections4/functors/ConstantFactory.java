@@ -26,6 +26,7 @@ import org.apache.commons.collections4.Factory;
  * No check is made that the object is immutable. In general, only immutable
  * objects should use the constant factory. Mutable objects should
  * use the prototype factory.
+ * </p>
  *
  * @since 3.0
  */
@@ -46,9 +47,8 @@ public class ConstantFactory<T> implements Factory<T>, Serializable {
      *
      * @param <T>  the type of the constant
      * @param constantToReturn  the constant object to return each time in the factory
-     * @return the <code>constant</code> factory.
+     * @return the {@code constant} factory.
      */
-    @SuppressWarnings("unchecked") // The null factory works for all object types
     public static <T> Factory<T> constantFactory(final T constantToReturn) {
         if (constantToReturn == null) {
             return NULL_INSTANCE;
@@ -58,7 +58,7 @@ public class ConstantFactory<T> implements Factory<T>, Serializable {
 
     /**
      * Constructor that performs no validation.
-     * Use <code>constantFactory</code> if you want that.
+     * Use {@code constantFactory} if you want that.
      *
      * @param constantToReturn  the constant to return each time
      */

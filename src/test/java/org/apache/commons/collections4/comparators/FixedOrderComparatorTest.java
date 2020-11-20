@@ -60,8 +60,7 @@ public class FixedOrderComparatorTest extends AbstractComparatorTest<String> {
 
     @Override
     public Comparator<String> makeObject() {
-        final FixedOrderComparator<String> comparator = new FixedOrderComparator<>(topCities);
-        return comparator;
+        return new FixedOrderComparator<>(topCities);
     }
 
     @Override
@@ -88,8 +87,8 @@ public class FixedOrderComparatorTest extends AbstractComparatorTest<String> {
     @Test
     public void testConstructorPlusAdd() {
         final FixedOrderComparator<String> comparator = new FixedOrderComparator<>();
-        for (final String topCitie : topCities) {
-            comparator.add(topCitie);
+        for (final String topCity : topCities) {
+            comparator.add(topCity);
         }
         final String[] keys = topCities.clone();
         assertComparatorYieldsOrder(keys, comparator);
@@ -141,9 +140,9 @@ public class FixedOrderComparatorTest extends AbstractComparatorTest<String> {
     @Test
     public void testLock() {
         final FixedOrderComparator<String> comparator = new FixedOrderComparator<>(topCities);
-        assertEquals(false, comparator.isLocked());
+        assertFalse(comparator.isLocked());
         comparator.compare("New York", "Tokyo");
-        assertEquals(true, comparator.isLocked());
+        assertTrue(comparator.isLocked());
         try {
             comparator.add("Minneapolis");
             fail("Should have thrown an UnsupportedOperationException");
@@ -225,9 +224,10 @@ public class FixedOrderComparatorTest extends AbstractComparatorTest<String> {
             }
 
             // testShuffle
-            for (int i = 0; i < keys.length && !isInNewOrder; i++) {
-                if( !orderedObjects[i].equals(keys[i])) {
+            for (int i = 0; i < keys.length; i++) {
+                if (!orderedObjects[i].equals(keys[i])) {
                     isInNewOrder = true;
+                    break;
                 }
             }
         }
@@ -240,5 +240,4 @@ public class FixedOrderComparatorTest extends AbstractComparatorTest<String> {
             assertEquals(orderedObjects[i], keys[i]);
         }
     }
-
 }

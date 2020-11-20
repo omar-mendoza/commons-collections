@@ -31,6 +31,7 @@ import org.apache.commons.collections4.ListValuedMap;
  * <p>
  * Subclasses specify a Map implementation to use as the internal storage and
  * the List implementation to use as values.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -91,10 +92,10 @@ public abstract class AbstractListValuedMap<K, V> extends AbstractMultiValuedMap
     /**
      * Removes all values associated with the specified key.
      * <p>
-     * A subsequent <code>get(Object)</code> would return an empty list.
+     * A subsequent {@code get(Object)} would return an empty list.
      *
      * @param key  the key to remove values from
-     * @return the <code>List</code> of values removed, will return an empty,
+     * @return the {@code List} of values removed, will return an empty,
      *   unmodifiable list for no mapping found.
      */
     @Override
@@ -108,7 +109,7 @@ public abstract class AbstractListValuedMap<K, V> extends AbstractMultiValuedMap
      */
     private class WrappedList extends WrappedCollection implements List<V> {
 
-        public WrappedList(final K key) {
+        WrappedList(final K key) {
             super(key);
         }
 
@@ -219,13 +220,13 @@ public abstract class AbstractListValuedMap<K, V> extends AbstractMultiValuedMap
         private List<V> values;
         private ListIterator<V> iterator;
 
-        public ValuesListIterator(final K key) {
+        ValuesListIterator(final K key) {
             this.key = key;
             this.values = ListUtils.emptyIfNull(getMap().get(key));
             this.iterator = values.listIterator();
         }
 
-        public ValuesListIterator(final K key, final int index) {
+        ValuesListIterator(final K key, final int index) {
             this.key = key;
             this.values = ListUtils.emptyIfNull(getMap().get(key));
             this.iterator = values.listIterator(index);

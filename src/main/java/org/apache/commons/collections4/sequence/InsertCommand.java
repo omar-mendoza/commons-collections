@@ -24,6 +24,7 @@ package org.apache.commons.collections4.sequence;
  * transforming the first sequence into the second sequence uses an instance of
  * this class to represent the insertion of this object. The objects embedded in
  * these type of commands always come from the second sequence.
+ * </p>
  *
  * @see SequencesComparator
  * @see EditScript
@@ -42,7 +43,7 @@ public class InsertCommand<T> extends EditCommand<T> {
     }
 
     /**
-     * Accept a visitor. When an <code>InsertCommand</code> accepts a visitor,
+     * Accept a visitor. When an {@code InsertCommand} accepts a visitor,
      * it calls its {@link CommandVisitor#visitInsertCommand visitInsertCommand}
      * method.
      *

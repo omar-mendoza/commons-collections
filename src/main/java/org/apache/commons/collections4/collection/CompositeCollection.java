@@ -19,11 +19,13 @@ package org.apache.commons.collections4.collection;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.EmptyIterator;
 import org.apache.commons.collections4.iterators.IteratorChain;
 import org.apache.commons.collections4.list.UnmodifiableList;
@@ -34,7 +36,7 @@ import org.apache.commons.collections4.list.UnmodifiableList;
  * Changes made to this collection will actually be made on the decorated collection.
  * Add and remove operations require the use of a pluggable strategy. If no
  * strategy is provided then add and remove are unsupported.
- *
+ * </p>
  * @param <E> the type of the elements in the collection
  * @since 3.0
  */
@@ -92,8 +94,8 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Gets the size of this composite collection.
      * <p>
-     * This implementation calls <code>size()</code> on each collection.
-     *
+     * This implementation calls {@code size()} on each collection.
+     * </p>
      * @return total number of elements in all contained containers
      */
     @Override
@@ -108,8 +110,8 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Checks whether this composite collection is empty.
      * <p>
-     * This implementation calls <code>isEmpty()</code> on each collection.
-     *
+     * This implementation calls {@code isEmpty()} on each collection.
+     * </p>
      * @return true if all of the contained collections are empty
      */
     @Override
@@ -125,8 +127,8 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Checks whether this composite collection contains the object.
      * <p>
-     * This implementation calls <code>contains()</code> on each collection.
-     *
+     * This implementation calls {@code contains()} on each collection.
+     * </p>
      * @param obj  the object to search for
      * @return true if obj is contained in any of the contained collections
      */
@@ -143,10 +145,10 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Gets an iterator over all the collections in this composite.
      * <p>
-     * This implementation uses an <code>IteratorChain</code>.
-     *
-     * @return an <code>IteratorChain</code> instance which supports
-     *  <code>remove()</code>. Iteration occurs over contained collections in
+     * This implementation uses an {@code IteratorChain}.
+     * </p>
+     * @return an {@code IteratorChain} instance which supports
+     *  {@code remove()}. Iteration occurs over contained collections in
      *  the order they were added, but this behavior should not be relied upon.
      * @see IteratorChain
      */
@@ -179,7 +181,7 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
 
     /**
      * Returns an object array, populating the supplied array if possible.
-     * See <code>Collection</code> interface for full details.
+     * See {@code Collection} interface for full details.
      *
      * @param <T>  the type of the elements in the collection
      * @param array  the array to use, populating if possible
@@ -223,8 +225,8 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     @Override
     public boolean add(final E obj) {
         if (mutator == null) {
-           throw new UnsupportedOperationException(
-               "add() is not supported on CompositeCollection without a CollectionMutator strategy");
+            throw new UnsupportedOperationException(
+                "add() is not supported on CompositeCollection without a CollectionMutator strategy");
         }
         return mutator.add(this, all, obj);
     }
@@ -252,14 +254,17 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Checks whether this composite contains all the elements in the specified collection.
      * <p>
-     * This implementation calls <code>contains()</code> for each element in the
+     * This implementation calls {@code contains()} for each element in the
      * specified collection.
-     *
+     * </p>
      * @param coll  the collection to check for
      * @return true if all elements contained
      */
     @Override
     public boolean containsAll(final Collection<?> coll) {
+        if (coll == null) {
+            return false;
+        }
         for (final Object item : coll) {
             if (contains(item) == false) {
                 return false;
@@ -292,15 +297,15 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Removes the elements in the specified collection from this composite collection.
      * <p>
-     * This implementation calls <code>removeAll</code> on each collection.
-     *
+     * This implementation calls {@code removeAll} on each collection.
+     * </p>
      * @param coll  the collection to remove
      * @return true if the collection was modified
      * @throws UnsupportedOperationException if removeAll is unsupported
      */
     @Override
     public boolean removeAll(final Collection<?> coll) {
-        if (coll.size() == 0) {
+        if (CollectionUtils.isEmpty(coll)) {
             return false;
         }
         boolean changed = false;
@@ -311,11 +316,33 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     }
 
     /**
+     * Removes all of the elements of this collection that satisfy the given predicate from this composite collection.
+     * <p>
+     * This implementation calls {@code removeIf} on each collection.
+     * </p>
+     * @param filter  a predicate which returns true for elements to be removed
+     * @return true if the collection was modified
+     * @throws UnsupportedOperationException if removeIf is unsupported
+     * @since 4.4
+     */
+    @Override
+    public boolean removeIf(final Predicate<? super E> filter) {
+        if (Objects.isNull(filter)) {
+            return false;
+        }
+        boolean changed = false;
+        for (final Collection<E> item : all) {
+            changed |= item.removeIf(filter);
+        }
+        return changed;
+    }
+
+    /**
      * Retains all the elements in the specified collection in this composite collection,
      * removing all others.
      * <p>
-     * This implementation calls <code>retainAll()</code> on each collection.
-     *
+     * This implementation calls {@code retainAll()} on each collection.
+     * </p>
      * @param coll  the collection to remove
      * @return true if the collection was modified
      * @throws UnsupportedOperationException if retainAll is unsupported
@@ -323,8 +350,10 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     @Override
     public boolean retainAll(final Collection<?> coll) {
         boolean changed = false;
-        for (final Collection<E> item : all) {
-            changed |= item.retainAll(coll);
+        if (coll != null) {
+            for (final Collection<E> item : all) {
+                changed |= item.retainAll(coll);
+            }
         }
         return changed;
     }
@@ -332,8 +361,8 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
     /**
      * Removes all of the elements from this collection .
      * <p>
-     * This implementation calls <code>clear()</code> on each collection.
-     *
+     * This implementation calls {@code clear()} on each collection.
+     * </p>
      * @throws UnsupportedOperationException if clear is unsupported
      */
     @Override
@@ -359,7 +388,9 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
      * @param compositeCollection  the Collection to be appended to the composite
      */
     public void addComposited(final Collection<E> compositeCollection) {
-        all.add(compositeCollection);
+        if (compositeCollection != null) {
+            all.add(compositeCollection);
+        }
     }
 
     /**
@@ -370,8 +401,12 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
      */
     public void addComposited(final Collection<E> compositeCollection1,
                               final Collection<E> compositeCollection2) {
-        all.add(compositeCollection1);
-        all.add(compositeCollection2);
+        if (compositeCollection1 != null) {
+            all.add(compositeCollection1);
+        }
+        if (compositeCollection2 != null) {
+            all.add(compositeCollection2);
+        }
     }
 
     /**
@@ -380,7 +415,11 @@ public class CompositeCollection<E> implements Collection<E>, Serializable {
      * @param compositeCollections  the Collections to be appended to the composite
      */
     public void addComposited(final Collection<E>... compositeCollections) {
-        all.addAll(Arrays.asList(compositeCollections));
+        for (final Collection<E> compositeCollection : compositeCollections) {
+            if (compositeCollection != null) {
+                all.add(compositeCollection);
+            }
+        }
     }
 
     /**

@@ -1,9 +1,10 @@
 /*
- * Copyright 2013 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -33,7 +34,7 @@ public class NodeListIteratorTest extends AbstractIteratorTest<Node> {
     private Node[] nodes;
 
     // NodeListIterator supports two constructors. This flag allows to
-    // control, which constructor to use in makeObject() and makeEmtpyIterator
+    // control, which constructor to use in makeObject() and makeEmptyIterator
     private boolean createIteratorWithStandardConstr = true;
 
     /**

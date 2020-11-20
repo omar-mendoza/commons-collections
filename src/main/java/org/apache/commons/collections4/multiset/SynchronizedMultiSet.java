@@ -22,11 +22,12 @@ import org.apache.commons.collections4.MultiSet;
 import org.apache.commons.collections4.collection.SynchronizedCollection;
 
 /**
- * Decorates another {@link MultiSet} to synchronize its behaviour
+ * Decorates another {@link MultiSet} to synchronize its behavior
  * for a multi-threaded environment.
  * <p>
  * Methods are synchronized, then forwarded to the decorated multiset.
  * Iterators must be separately synchronized around the loop.
+ * </p>
  *
  * @param <E> the type held in the multiset
  * @since 4.1

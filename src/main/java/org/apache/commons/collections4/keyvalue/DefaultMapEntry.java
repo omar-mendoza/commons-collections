@@ -24,6 +24,8 @@ import org.apache.commons.collections4.KeyValue;
  * A restricted implementation of {@link java.util.Map.Entry Map.Entry} that prevents
  * the {@link java.util.Map.Entry Map.Entry} contract from being broken.
  *
+ * @param <K> the type of keys
+ * @param <V> the type of mapped values
  * @since 3.0
  */
 public final class DefaultMapEntry<K, V> extends AbstractMapEntry<K, V> {
@@ -39,7 +41,7 @@ public final class DefaultMapEntry<K, V> extends AbstractMapEntry<K, V> {
     }
 
     /**
-     * Constructs a new entry from the specified <code>KeyValue</code>.
+     * Constructs a new entry from the specified {@code KeyValue}.
      *
      * @param pair  the pair to copy, must not be null
      * @throws NullPointerException if the entry is null
@@ -49,7 +51,7 @@ public final class DefaultMapEntry<K, V> extends AbstractMapEntry<K, V> {
     }
 
     /**
-     * Constructs a new entry from the specified <code>Map.Entry</code>.
+     * Constructs a new entry from the specified {@code Map.Entry}.
      *
      * @param entry  the entry to copy, must not be null
      * @throws NullPointerException if the entry is null

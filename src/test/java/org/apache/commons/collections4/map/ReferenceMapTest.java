@@ -21,14 +21,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
-import junit.framework.Test;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.BulkTest;
+import org.apache.commons.collections4.map.AbstractHashedMap.HashEntry;
+import org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceEntry;
 import org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength;
+
+import junit.framework.Test;
 
 /**
  * Tests for ReferenceMap.
@@ -255,6 +260,40 @@ public class ReferenceMapTest<K, V> extends AbstractIterableMapTest<K, V> {
         }
     }
 
+    public void testCustomPurge() {
+        final List<Integer> expiredValues = new ArrayList<>();
+        @SuppressWarnings("unchecked")
+        final Consumer<Integer> consumer = (Consumer<Integer> & Serializable) v -> expiredValues.add(v);
+        final Map<Integer, Integer> map = new ReferenceMap<Integer, Integer>(ReferenceStrength.WEAK, ReferenceStrength.HARD, false) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected ReferenceEntry<Integer, Integer> createEntry(final HashEntry<Integer, Integer> next, final int hashCode, final Integer key, final Integer value) {
+                return new AccessibleEntry<>(this, next, hashCode, key, value, consumer);
+            }
+        };
+        for (int i = 100000; i < 100010; i++) {
+            map.put(Integer.valueOf(i), Integer.valueOf(i));
+        }
+        int iterations = 0;
+        int bytz = 2;
+        while (true) {
+            System.gc();
+            if (iterations++ > 50 || bytz < 0) {
+                fail("Max iterations reached before resource released.");
+            }
+            map.isEmpty();
+            if (!expiredValues.isEmpty()) {
+                break;
+            }
+            // create garbage:
+            @SuppressWarnings("unused")
+            final byte[] b = new byte[bytz];
+            bytz = bytz * 2;
+        }
+        assertFalse("Value should be stored", expiredValues.isEmpty());
+    }
+
     /**
      * Test whether after serialization the "data" HashEntry array is the same size as the original.<p>
      *
@@ -262,21 +301,20 @@ public class ReferenceMapTest<K, V> extends AbstractIterableMapTest<K, V> {
      */
     public void testDataSizeAfterSerialization() throws IOException, ClassNotFoundException {
 
-        final ReferenceMap<String,String> serialiseMap = new ReferenceMap<>(ReferenceStrength.WEAK, ReferenceStrength.WEAK, true);
-        serialiseMap.put("KEY", "VALUE");
+        final ReferenceMap<String, String> serializeMap = new ReferenceMap<>(ReferenceStrength.WEAK, ReferenceStrength.WEAK, true);
+        serializeMap.put("KEY", "VALUE");
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ObjectOutputStream out = new ObjectOutputStream(baos)) {
-            out.writeObject(serialiseMap);
+            out.writeObject(serializeMap);
         }
 
         final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         try (ObjectInputStream in = new ObjectInputStream(bais)) {
             @SuppressWarnings("unchecked")
-            final
-            ReferenceMap<String,String> deserialisedMap = (ReferenceMap<String,String>) in.readObject();
-            assertEquals(1, deserialisedMap.size());
-            assertEquals(serialiseMap.data.length, deserialisedMap.data.length);
+            final ReferenceMap<String, String> deserializedMap = (ReferenceMap<String, String>) in.readObject();
+            assertEquals(1, deserializedMap.size());
+            assertEquals(serializeMap.data.length, deserializedMap.data.length);
         }
 
     }
@@ -292,4 +330,21 @@ public class ReferenceMapTest<K, V> extends AbstractIterableMapTest<K, V> {
         }
     }
 
+    private static class AccessibleEntry<K, V> extends ReferenceEntry<K, V> {
+        final AbstractReferenceMap<K, V> parent;
+        final Consumer<V> consumer;
+
+        AccessibleEntry(final AbstractReferenceMap<K, V> parent, final HashEntry<K, V> next, final int hashCode, final K key, final V value, final Consumer<V> consumer) {
+            super(parent, next, hashCode, key, value);
+            this.parent = parent;
+            this.consumer = consumer;
+        }
+
+        @Override
+        protected void onPurge() {
+            if (parent.isValueType(ReferenceStrength.HARD)) {
+                consumer.accept(getValue());
+            }
+        }
+    }
 }

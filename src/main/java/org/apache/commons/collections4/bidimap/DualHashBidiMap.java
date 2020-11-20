@@ -32,9 +32,11 @@ import org.apache.commons.collections4.BidiMap;
  * This provides fast lookups at the expense of storing two sets of map entries.
  * Commons Collections would welcome the addition of a direct hash-based
  * implementation of the {@link BidiMap} interface.
+ * </p>
  * <p>
  * NOTE: From Commons Collections 3.1, all subclasses will use {@link HashMap}
- * and the flawed <code>createMap</code> method is ignored.
+ * and the flawed {@code createMap} method is ignored.
+ * </p>
  *
  * @param <K> the type of the keys in the map
  * @param <V> the type of the values in the map
@@ -47,15 +49,15 @@ public class DualHashBidiMap<K, V> extends AbstractDualBidiMap<K, V> implements 
     private static final long serialVersionUID = 721969328361808L;
 
     /**
-     * Creates an empty <code>HashBidiMap</code>.
+     * Creates an empty {@code HashBidiMap}.
      */
     public DualHashBidiMap() {
         super(new HashMap<K, V>(), new HashMap<V, K>());
     }
 
     /**
-     * Constructs a <code>HashBidiMap</code> and copies the mappings from
-     * specified <code>Map</code>.
+     * Constructs a {@code HashBidiMap} and copies the mappings from
+     * specified {@code Map}.
      *
      * @param map  the map whose mappings are to be placed in this map
      */
@@ -65,7 +67,7 @@ public class DualHashBidiMap<K, V> extends AbstractDualBidiMap<K, V> implements 
     }
 
     /**
-     * Constructs a <code>HashBidiMap</code> that decorates the specified maps.
+     * Constructs a {@code HashBidiMap} that decorates the specified maps.
      *
      * @param normalMap  the normal direction map
      * @param reverseMap  the reverse direction map

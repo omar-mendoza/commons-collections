@@ -21,19 +21,22 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.collections4.Factory;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.functors.FactoryTransformer;
 
 /**
- * Decorates another <code>Map</code> to create objects in the map on demand.
+ * Decorates another {@code Map} to create objects in the map on demand.
  * <p>
  * When the {@link #get(Object)} method is called with a key that does not
  * exist in the map, the factory is used to create the object. The created
  * object will be added to the map using the requested key.
+ * </p>
  * <p>
  * For instance:
+ * </p>
  * <pre>
  * Factory&lt;Date&gt; factory = new Factory&lt;Date&gt;() {
  *     public Date create() {
@@ -44,17 +47,21 @@ import org.apache.commons.collections4.functors.FactoryTransformer;
  * Date date = lazy.get("NOW");
  * </pre>
  *
- * After the above code is executed, <code>date</code> will refer to
- * a new <code>Date</code> instance. Furthermore, that <code>Date</code>
+ * <p>
+ * After the above code is executed, {@code date} will refer to
+ * a new {@code Date} instance. Furthermore, that {@code Date}
  * instance is mapped to the "NOW" key in the map.
+ * </p>
  * <p>
  * <strong>Note that LazyMap is not synchronized and is not thread-safe.</strong>
  * If you wish to use this map from multiple threads concurrently, you must use
  * appropriate synchronization. The simplest approach is to wrap this map
  * using {@link java.util.Collections#synchronizedMap(Map)}. This class may throw
  * exceptions when accessed by concurrent threads without synchronization.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 3.1.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -79,7 +86,7 @@ public class LazyMap<K, V> extends AbstractMapDecorator<K, V> implements Seriali
      * @throws NullPointerException if map or factory is null
      * @since 4.0
      */
-    public static <K, V> LazyMap<K, V> lazyMap(final Map<K, V> map, final Factory< ? extends V> factory) {
+    public static <K, V> LazyMap<K, V> lazyMap(final Map<K, V> map, final Factory<? extends V> factory) {
         return new LazyMap<>(map, factory);
     }
 
@@ -106,12 +113,9 @@ public class LazyMap<K, V> extends AbstractMapDecorator<K, V> implements Seriali
      * @param factory  the factory to use, must not be null
      * @throws NullPointerException if map or factory is null
      */
-    protected LazyMap(final Map<K,V> map, final Factory<? extends V> factory) {
+    protected LazyMap(final Map<K, V> map, final Factory<? extends V> factory) {
         super(map);
-        if (factory == null) {
-            throw new NullPointerException("Factory must not be null");
-        }
-        this.factory = FactoryTransformer.factoryTransformer(factory);
+        this.factory = FactoryTransformer.factoryTransformer(Objects.requireNonNull(factory, "factory"));
     }
 
     /**
@@ -121,12 +125,9 @@ public class LazyMap<K, V> extends AbstractMapDecorator<K, V> implements Seriali
      * @param factory  the factory to use, must not be null
      * @throws NullPointerException if map or factory is null
      */
-    protected LazyMap(final Map<K,V> map, final Transformer<? super K, ? extends V> factory) {
+    protected LazyMap(final Map<K, V> map, final Transformer<? super K, ? extends V> factory) {
         super(map);
-        if (factory == null) {
-            throw new NullPointerException("Factory must not be null");
-        }
-        this.factory = factory;
+        this.factory = Objects.requireNonNull(factory, "factory");
     }
 
     //-----------------------------------------------------------------------

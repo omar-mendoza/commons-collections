@@ -22,6 +22,7 @@ package org.apache.commons.collections4;
  * The size of the map can vary, but it can never exceed a preset
  * maximum number of elements. This interface allows the querying of details
  * associated with the maximum number of elements.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -32,7 +33,7 @@ public interface BoundedMap<K, V> extends IterableMap<K, V> {
     /**
      * Returns true if this map is full and no new elements can be added.
      *
-     * @return <code>true</code> if the map is full
+     * @return {@code true} if the map is full
      */
     boolean isFull();
 

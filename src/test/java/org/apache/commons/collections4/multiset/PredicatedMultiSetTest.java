@@ -44,12 +44,7 @@ public class PredicatedMultiSetTest<T> extends AbstractMultiSetTest<T> {
     //--------------------------------------------------------------------------
 
     protected Predicate<T> stringPredicate() {
-        return new Predicate<T>() {
-            @Override
-            public boolean evaluate(final T o) {
-                return o instanceof String;
-            }
-        };
+        return o -> o instanceof String;
     }
 
     protected Predicate<T> truePredicate = TruePredicate.<T>truePredicate();
@@ -80,7 +75,7 @@ public class PredicatedMultiSetTest<T> extends AbstractMultiSetTest<T> {
             assertEquals(true, multiset.contains(els[i]));
         }
         Set<T> set = ((PredicatedMultiSet<T>) multiset).uniqueSet();
-        assertTrue("Unique set contains the first element",set.contains(els[0]));
+        assertTrue("Unique set contains the first element", set.contains(els[0]));
         assertEquals(true, multiset.remove(els[0]));
         set = ((PredicatedMultiSet<T>) multiset).uniqueSet();
         assertTrue("Unique set does not contain anymore the first element",

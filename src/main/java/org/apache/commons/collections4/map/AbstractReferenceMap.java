@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.collections4.MapIterator;
@@ -41,39 +42,46 @@ import org.apache.commons.collections4.keyvalue.DefaultMapEntry;
  * <p>
  * This class implements all the features necessary for a subclass reference
  * hash-based map. Key-value entries are stored in instances of the
- * <code>ReferenceEntry</code> class which can be overridden and replaced.
+ * {@code ReferenceEntry} class which can be overridden and replaced.
  * The iterators can similarly be replaced, without the need to replace the KeySet,
  * EntrySet and Values view classes.
+ * </p>
  * <p>
- * Overridable methods are provided to change the default hashing behaviour, and
+ * Overridable methods are provided to change the default hashing behavior, and
  * to change how entries are added to and removed from the map. Hopefully, all you
  * need for unusual subclasses is here.
+ * </p>
  * <p>
- * When you construct an <code>AbstractReferenceMap</code>, you can specify what
+ * When you construct an {@code AbstractReferenceMap}, you can specify what
  * kind of references are used to store the map's keys and values.
  * If non-hard references are used, then the garbage collector can remove
  * mappings if a key or value becomes unreachable, or if the JVM's memory is
  * running low. For information on how the different reference types behave,
  * see {@link Reference}.
+ * </p>
  * <p>
  * Different types of references can be specified for keys and values.
  * The keys can be configured to be weak but the values hard,
  * in which case this class will behave like a
  * <a href="http://java.sun.com/j2se/1.4/docs/api/java/util/WeakHashMap.html">
- * <code>WeakHashMap</code></a>. However, you can also specify hard keys and
+ * {@code WeakHashMap}</a>. However, you can also specify hard keys and
  * weak values, or any other combination. The default constructor uses
  * hard keys and soft values, providing a memory-sensitive cache.
+ * </p>
  * <p>
  * This {@link Map} implementation does <i>not</i> allow null elements.
  * Attempting to add a null key or value to the map will raise a
- * <code>NullPointerException</code>.
+ * {@code NullPointerException}.
+ * </p>
  * <p>
  * All the available iterators can be reset back to the start by casting to
- * <code>ResettableIterator</code> and calling <code>reset()</code>.
+ * {@code ResettableIterator} and calling {@code reset()}.
+ * </p>
  * <p>
  * This implementation is not synchronized.
  * You can use {@link java.util.Collections#synchronizedMap} to
- * provide synchronized access to a <code>ReferenceMap</code>.
+ * provide synchronized access to a {@code ReferenceMap}.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -86,7 +94,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
     /**
      * Reference type enum.
      */
-    public static enum ReferenceStrength {
+    public enum ReferenceStrength {
         HARD(0), SOFT(1), WEAK(2);
 
         /** value */
@@ -111,7 +119,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
             }
         }
 
-        private ReferenceStrength(final int value) {
+        ReferenceStrength(final int value) {
             this.value = value;
         }
 
@@ -262,13 +270,8 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
      */
     @Override
     public V put(final K key, final V value) {
-        if (key == null) {
-            throw new NullPointerException("null keys not allowed");
-        }
-        if (value == null) {
-            throw new NullPointerException("null values not allowed");
-        }
-
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(value, "value");
         purgeBeforeWrite();
         return super.put(key, value);
     }
@@ -295,7 +298,9 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
     public void clear() {
         super.clear();
         // drain the queue
-        while (queue.poll() != null) {} // NOPMD
+        while (queue.poll() != null) {
+            // empty
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -312,8 +317,8 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
 
     /**
      * Returns a set view of this map's entries.
-     * An iterator returned entry is valid until <code>next()</code> is called again.
-     * The <code>setValue()</code> method on the <code>toArray</code> entries has no effect.
+     * An iterator returned entry is valid until {@code next()} is called again.
+     * The {@code setValue()} method on the {@code toArray} entries has no effect.
      *
      * @return a set view of this map's entries
      */
@@ -400,13 +405,15 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
         HashEntry<K, V> previous = null;
         HashEntry<K, V> entry = data[index];
         while (entry != null) {
-            if (((ReferenceEntry<K, V>) entry).purge(ref)) {
+            final ReferenceEntry<K, V> refEntry = (ReferenceEntry<K, V>) entry;
+            if (refEntry.purge(ref)) {
                 if (previous == null) {
                     data[index] = entry.next;
                 } else {
                     previous.next = entry.next;
                 }
                 this.size--;
+                refEntry.onPurge();
                 return;
             }
             previous = entry;
@@ -450,7 +457,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
      * before comparison.
      *
      * @param key1  the first key to compare passed in from outside
-     * @param key2  the second key extracted from the entry via <code>entry.key</code>
+     * @param key2  the second key extracted from the entry via {@code entry.key}
      * @return true if equal
      */
     @Override
@@ -657,8 +664,8 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
         /**
          * Compares this map entry to another.
          * <p>
-         * This implementation uses <code>isEqualKey</code> and
-         * <code>isEqualValue</code> on the main map for comparison.
+         * This implementation uses {@code isEqualKey} and
+         * {@code isEqualValue} on the main map for comparison.
          *
          * @param obj  the other map entry to compare to
          * @return true if equal, false if not
@@ -672,7 +679,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
                 return false;
             }
 
-            final Map.Entry<?, ?> entry = (Map.Entry<?, ?>)obj;
+            final Map.Entry<?, ?> entry = (Map.Entry<?, ?>) obj;
             final Object entryKey = entry.getKey();  // convert to hard reference
             final Object entryValue = entry.getValue();  // convert to hard reference
             if (entryKey == null || entryValue == null) {
@@ -687,7 +694,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
         /**
          * Gets the hashcode of the entry using temporary hard references.
          * <p>
-         * This implementation uses <code>hashEntry</code> on the main map.
+         * This implementation uses {@code hashEntry} on the main map.
          *
          * @return the hashcode of the entry
          */
@@ -722,11 +729,18 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
         }
 
         /**
+         * This is the callback for custom "after purge" logic
+         */
+        protected void onPurge() {
+            // empty
+        }
+
+        /**
          * Purges the specified reference
          * @param ref  the reference to purge
          * @return true or false
          */
-        boolean purge(final Reference<?> ref) {
+        protected boolean purge(final Reference<?> ref) {
             boolean r = parent.keyType != ReferenceStrength.HARD && key == ref;
             r = r || parent.valueType != ReferenceStrength.HARD && value == ref;
             if (r) {
@@ -736,7 +750,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
                 if (parent.valueType != ReferenceStrength.HARD) {
                     ((Reference<?>) value).clear();
                 } else if (parent.purgeValues) {
-                    value = null;
+                    nullValue();
                 }
             }
             return r;
@@ -749,6 +763,13 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
          */
         protected ReferenceEntry<K, V> next() {
             return (ReferenceEntry<K, V>) next;
+        }
+
+        /**
+         * This method can be overridden to provide custom logic to purge value
+         */
+        protected void nullValue() {
+            value = null;
         }
     }
 
@@ -773,7 +794,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
 
         int expectedModCount;
 
-        public ReferenceBaseIterator(final AbstractReferenceMap<K, V> parent) {
+        ReferenceBaseIterator(final AbstractReferenceMap<K, V> parent) {
             super();
             this.parent = parent;
             index = parent.size() != 0 ? parent.data.length : 0;
@@ -855,7 +876,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
     static class ReferenceEntrySetIterator<K, V>
             extends ReferenceBaseIterator<K, V> implements Iterator<Map.Entry<K, V>> {
 
-        public ReferenceEntrySetIterator(final AbstractReferenceMap<K, V> parent) {
+        ReferenceEntrySetIterator(final AbstractReferenceMap<K, V> parent) {
             super(parent);
         }
 
@@ -952,7 +973,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
         /** the hashCode of the key (even if the reference points to a value) */
         private final int hash;
 
-        public SoftRef(final int hash, final T r, final ReferenceQueue<? super T> q) {
+        SoftRef(final int hash, final T r, final ReferenceQueue<? super T> q) {
             super(r, q);
             this.hash = hash;
         }
@@ -970,7 +991,7 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
         /** the hashCode of the key (even if the reference points to a value) */
         private final int hash;
 
-        public WeakRef(final int hash, final T r, final ReferenceQueue<? super T> q) {
+        WeakRef(final int hash, final T r, final ReferenceQueue<? super T> q) {
             super(r, q);
             this.hash = hash;
         }
@@ -987,12 +1008,12 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
      * <p>
      * Serialization is not one of the JDK's nicest topics. Normal serialization will
      * initialise the superclass before the subclass. Sometimes however, this isn't
-     * what you want, as in this case the <code>put()</code> method on read can be
+     * what you want, as in this case the {@code put()} method on read can be
      * affected by subclass state.
      * <p>
      * The solution adopted here is to serialize the state data of this class in
      * this protected method. This method must be called by the
-     * <code>writeObject()</code> of the first serializable subclass.
+     * {@code writeObject()} of the first serializable subclass.
      * <p>
      * Subclasses may override if they have a specific field that must be present
      * on read before this implementation will work. Generally, the read determines
@@ -1021,15 +1042,15 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
      * <p>
      * Serialization is not one of the JDK's nicest topics. Normal serialization will
      * initialise the superclass before the subclass. Sometimes however, this isn't
-     * what you want, as in this case the <code>put()</code> method on read can be
+     * what you want, as in this case the {@code put()} method on read can be
      * affected by subclass state.
      * <p>
      * The solution adopted here is to deserialize the state data of this class in
      * this protected method. This method must be called by the
-     * <code>readObject()</code> of the first serializable subclass.
+     * {@code readObject()} of the first serializable subclass.
      * <p>
      * Subclasses may override if the subclass has a specific field that must be present
-     * before <code>put()</code> or <code>calculateThreshold()</code> will work correctly.
+     * before {@code put()} or {@code calculateThreshold()} will work correctly.
      *
      * @param in  the input stream
      * @throws IOException if an error occurs while reading from the stream
@@ -1072,5 +1093,14 @@ public abstract class AbstractReferenceMap<K, V> extends AbstractHashedMap<K, V>
      */
     protected boolean isKeyType(final ReferenceStrength type) {
         return this.keyType == type;
+    }
+
+    /**
+     * Provided protected read-only access to the value type.
+     * @param type the type to check against.
+     * @return true if valueType has the specified type
+     */
+    protected boolean isValueType(final ReferenceStrength type) {
+        return this.valueType == type;
     }
 }

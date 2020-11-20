@@ -124,8 +124,8 @@ public class MultiValueMapTest<K, V> extends AbstractObjectTest {
 
     public void testKeyedIterator() {
         final MultiValueMap<K, V> map = createTestMap();
-        final ArrayList<Object> actual = new ArrayList<Object>(IteratorUtils.toList(map.iterator("one")));
-        final ArrayList<Object> expected = new ArrayList<Object>(Arrays.asList("uno", "un"));
+        final ArrayList<Object> actual = new ArrayList<>(IteratorUtils.toList(map.iterator("one")));
+        final ArrayList<Object> expected = new ArrayList<>(Arrays.asList("uno", "un"));
         assertEquals(expected, actual);
     }
 
@@ -152,8 +152,7 @@ public class MultiValueMapTest<K, V> extends AbstractObjectTest {
     public void testIterator() {
         final MultiValueMap<K, V> map = createTestMap();
         @SuppressWarnings("unchecked")
-        final
-        Collection<V> values = new ArrayList<>((Collection<V>) map.values());
+        final Collection<V> values = new ArrayList<>((Collection<V>) map.values());
         final Iterator<Map.Entry<K, V>> iterator = map.iterator();
         while (iterator.hasNext()) {
             final Map.Entry<K, V> entry = iterator.next();
@@ -454,13 +453,13 @@ public class MultiValueMapTest<K, V> extends AbstractObjectTest {
     }
 
     public void testEmptyMapCompatibility() throws Exception {
-        final Map<?,?> map = makeEmptyMap();
-        final Map<?,?> map2 = (Map<?,?>) readExternalFormFromDisk(getCanonicalEmptyCollectionName(map));
+        final Map<?, ?> map = makeEmptyMap();
+        final Map<?, ?> map2 = (Map<?, ?>) readExternalFormFromDisk(getCanonicalEmptyCollectionName(map));
         assertEquals("Map is empty", 0, map2.size());
     }
     public void testFullMapCompatibility() throws Exception {
-        final Map<?,?> map = (Map<?,?>) makeObject();
-        final Map<?,?> map2 = (Map<?,?>) readExternalFormFromDisk(getCanonicalFullCollectionName(map));
+        final Map<?, ?> map = (Map<?, ?>) makeObject();
+        final Map<?, ?> map2 = (Map<?, ?>) readExternalFormFromDisk(getCanonicalFullCollectionName(map));
         assertEquals("Map is the right size", map.size(), map2.size());
         for (final Object key : map.keySet()) {
             assertEquals( "Map had inequal elements", map.get(key), map2.get(key) );

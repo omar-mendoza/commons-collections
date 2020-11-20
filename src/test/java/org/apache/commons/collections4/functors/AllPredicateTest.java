@@ -35,7 +35,7 @@ import java.util.Collections;
 public class AllPredicateTest extends AbstractAnyAllOnePredicateTest<Integer> {
 
     /**
-     * Creates a new <code>TestAllPredicate</code>.
+     * Creates a new {@code TestAllPredicate}.
      */
     public AllPredicateTest() {
         super(42);
@@ -45,7 +45,7 @@ public class AllPredicateTest extends AbstractAnyAllOnePredicateTest<Integer> {
      * {@inheritDoc}
      */
     @Override
-    protected final Predicate<Integer> getPredicateInstance(final Predicate<? super Integer> ... predicates) {
+    protected final Predicate<Integer> getPredicateInstance(final Predicate<? super Integer>... predicates) {
         return AllPredicate.allPredicate(predicates);
     }
 
@@ -115,7 +115,7 @@ public class AllPredicateTest extends AbstractAnyAllOnePredicateTest<Integer> {
     }
 
     /**
-     * Tests whether combining some true and one false evalutes to false.  Also verifies that only the first
+     * Tests whether combining some true and one false evaluates to false.  Also verifies that only the first
      * false predicate is actually evaluated
      */
     @Test

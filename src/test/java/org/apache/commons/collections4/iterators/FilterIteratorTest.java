@@ -150,28 +150,24 @@ public class FilterIteratorTest<E> extends AbstractIteratorTest<E> {
         try {
             iterator.next();
             fail("NoSuchElementException expected");
-        }
-        catch (final NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             // success
         }
     }
 
     private void verifyElementsInPredicate(final String[] elements) {
-        final Predicate<E> pred = new Predicate<E>() {
-            @Override
-            public boolean evaluate(final E x) {
-                for (final String element : elements) {
-                    if (element.equals(x)) {
-                        return true;
-                    }
+        final Predicate<E> pred = x -> {
+            for (final String element : elements) {
+                if (element.equals(x)) {
+                    return true;
                 }
-                return false;
             }
+            return false;
         };
         initIterator();
         iterator.setPredicate(pred);
         for (int i = 0; i < elements.length; i++) {
-            final String s = (String)iterator.next();
+            final String s = (String) iterator.next();
             assertEquals(elements[i], s);
             assertTrue(i == elements.length - 1 ? !iterator.hasNext() : iterator.hasNext());
         }
@@ -199,10 +195,7 @@ public class FilterIteratorTest<E> extends AbstractIteratorTest<E> {
      * @return "filtered" iterator
      */
     protected FilterIterator<E> makePassThroughFilter(final Iterator<E> i) {
-        final Predicate<E> pred = new Predicate<E>() {
-                @Override
-                public boolean evaluate(final E x) { return true; }
-        };
+        final Predicate<E> pred = x -> true;
         return new FilterIterator<>(i, pred);
     }
 
@@ -214,10 +207,7 @@ public class FilterIteratorTest<E> extends AbstractIteratorTest<E> {
      * @return "filtered" iterator
      */
     protected FilterIterator<E> makeBlockAllFilter(final Iterator<E> i) {
-        final Predicate<E> pred = new Predicate<E>() {
-                @Override
-                public boolean evaluate(final E x) { return false; }
-        };
+        final Predicate<E> pred = x -> false;
         return new FilterIterator<>(i, pred);
     }
 }

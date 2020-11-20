@@ -16,6 +16,8 @@
  */
 package org.apache.commons.collections4.iterators;
 
+import java.util.Objects;
+
 import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.Unmodifiable;
 
@@ -23,7 +25,10 @@ import org.apache.commons.collections4.Unmodifiable;
  * Decorates a map iterator such that it cannot be modified.
  * <p>
  * Attempts to modify it will result in an UnsupportedOperationException.
+ * </p>
  *
+ * @param <K> the type of keys
+ * @param <V> the type of mapped values
  * @since 3.0
  */
 public final class UnmodifiableMapIterator<K, V> implements MapIterator<K, V>, Unmodifiable {
@@ -43,9 +48,7 @@ public final class UnmodifiableMapIterator<K, V> implements MapIterator<K, V>, U
      */
     public static <K, V> MapIterator<K, V> unmodifiableMapIterator(
             final MapIterator<? extends K, ? extends V> iterator) {
-        if (iterator == null) {
-            throw new NullPointerException("MapIterator must not be null");
-        }
+        Objects.requireNonNull(iterator, "iterator");
         if (iterator instanceof Unmodifiable) {
             @SuppressWarnings("unchecked") // safe to upcast
             final MapIterator<K, V> tmpIterator = (MapIterator<K, V>) iterator;

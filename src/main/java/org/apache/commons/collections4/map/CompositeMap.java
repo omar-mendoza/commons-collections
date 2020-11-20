@@ -32,12 +32,14 @@ import org.apache.commons.collections4.collection.CompositeCollection;
  * Changes made to this map will actually be made on the decorated map.
  * Add and remove operations require the use of a pluggable strategy. If no
  * strategy is provided then add and remove are unsupported.
+ * </p>
  * <p>
  * <strong>Note that CompositeMap is not synchronized and is not thread-safe.</strong>
  * If you wish to use this map from multiple threads concurrently, you must use
  * appropriate synchronization. The simplest approach is to wrap this map
  * using {@link java.util.Collections#synchronizedMap(Map)}. This class may throw
  * exceptions when accessed by concurrent threads without synchronization.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -132,26 +134,28 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
      */
     @SuppressWarnings("unchecked")
     public synchronized void addComposited(final Map<K, V> map) throws IllegalArgumentException {
-        for (int i = composite.length - 1; i >= 0; --i) {
-            final Collection<K> intersect = CollectionUtils.intersection(this.composite[i].keySet(), map.keySet());
-            if (intersect.size() != 0) {
-                if (this.mutator == null) {
-                    throw new IllegalArgumentException("Key collision adding Map to CompositeMap");
+        if (map != null) {
+            for (int i = composite.length - 1; i >= 0; --i) {
+                final Collection<K> intersect = CollectionUtils.intersection(this.composite[i].keySet(), map.keySet());
+                if (intersect.size() != 0) {
+                    if (this.mutator == null) {
+                        throw new IllegalArgumentException("Key collision adding Map to CompositeMap");
+                    }
+                    this.mutator.resolveCollision(this, this.composite[i], map, intersect);
                 }
-                this.mutator.resolveCollision(this, this.composite[i], map, intersect);
             }
+            final Map<K, V>[] temp = new Map[this.composite.length + 1];
+            System.arraycopy(this.composite, 0, temp, 0, this.composite.length);
+            temp[temp.length - 1] = map;
+            this.composite = temp;
         }
-        final Map<K, V>[] temp = new Map[this.composite.length + 1];
-        System.arraycopy(this.composite, 0, temp, 0, this.composite.length);
-        temp[temp.length - 1] = map;
-        this.composite = temp;
     }
 
     /**
      * Remove a Map from the composite.
      *
      * @param map  the Map to be removed from the composite
-     * @return The removed Map or <code>null</code> if map is not in the composite
+     * @return The removed Map or {@code null} if map is not in the composite
      */
     @SuppressWarnings("unchecked")
     public synchronized Map<K, V> removeComposited(final Map<K, V> map) {
@@ -170,7 +174,7 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
 
     //-----------------------------------------------------------------------
     /**
-     * Calls <code>clear()</code> on all composited Maps.
+     * Calls {@code clear()} on all composited Maps.
      *
      * @throws UnsupportedOperationException if any of the composited Maps do not support clear()
      */
@@ -235,7 +239,7 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
 
     /**
      * Returns a set view of the mappings contained in this map.  Each element
-     * in the returned set is a <code>Map.Entry</code>.  The set is backed by the
+     * in the returned set is a {@code Map.Entry}.  The set is backed by the
      * map, so changes to the map are reflected in the set, and vice-versa.
      * If the map is modified while an iteration over the set is in progress,
      * the results of the iteration are undefined.  The set supports element
@@ -244,7 +248,7 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
      * {@code retainAll} and {@code clear} operations.  It does not support
      * the {@code add} or {@code addAll} operations.
      * <p>
-     * This implementation returns a <code>CompositeSet</code> which
+     * This implementation returns a {@code CompositeSet} which
      * composites the entry sets from all of the composited maps.
      *
      * @see CompositeSet
@@ -318,7 +322,7 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
      * {@code removeAll} {@code retainAll}, and {@code clear} operations.
      * It does not support the add or {@code addAll} operations.
      * <p>
-     * This implementation returns a <code>CompositeSet</code> which
+     * This implementation returns a {@code CompositeSet} which
      * composites the key sets from all of the composited maps.
      *
      * @return a set view of the keys contained in this map.
@@ -399,7 +403,7 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
      * Removes the mapping for this key from this map if it is present
      * (optional operation).   More formally, if this map contains a mapping
      * from key {@code k} to value {@code v} such that
-     * <code>(key==null ?  k==null : key.equals(k))</code>, that mapping
+     * {@code (key==null ?  k==null : key.equals(k))}, that mapping
      * is removed.  (The map can contain at most one such mapping.)
      *
      * <p>Returns the value to which the map previously associated the key, or
@@ -504,7 +508,7 @@ public class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Ser
      * @param <K> the type of the keys in the map
      * @param <V> the type of the values in the map
      */
-    public static interface MapMutator<K, V> extends Serializable {
+    public interface MapMutator<K, V> extends Serializable {
         /**
          * Called when adding a new Composited Map results in a
          * key collision.

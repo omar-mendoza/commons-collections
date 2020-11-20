@@ -36,7 +36,7 @@ public class DefaultEquator<T> implements Equator<T>, Serializable {
     public static final DefaultEquator INSTANCE = new DefaultEquator<>();
 
     /**
-     * Hashcode used for <code>null</code> objects.
+     * Hashcode used for {@code null} objects.
      */
     public static final int HASHCODE_NULL = -1;
 
@@ -46,7 +46,6 @@ public class DefaultEquator<T> implements Equator<T>, Serializable {
      * @param <T>  the object type
      * @return the singleton instance
      */
-    @SuppressWarnings("unchecked") // the static instance works for all types
     public static <T> DefaultEquator<T> defaultEquator() {
         return DefaultEquator.INSTANCE;
     }
@@ -69,8 +68,8 @@ public class DefaultEquator<T> implements Equator<T>, Serializable {
     /**
      * {@inheritDoc}
      *
-     * @return <code>o.hashCode()</code> if <code>o</code> is non-
-     *         <code>null</code>, else {@link #HASHCODE_NULL}.
+     * @return {@code o.hashCode()} if {@code o} is non-
+     *         {@code null}, else {@link #HASHCODE_NULL}.
      */
     @Override
     public int hash(final T o) {

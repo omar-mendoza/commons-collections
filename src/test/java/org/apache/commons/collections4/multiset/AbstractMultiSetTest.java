@@ -463,6 +463,22 @@ public abstract class AbstractMultiSetTest<T> extends AbstractCollectionTest<T> 
     }
 
     @SuppressWarnings("unchecked")
+    public void testMultiSetEntrySetUpdatedToZero() {
+        if (!isAddSupported()) {
+            return;
+        }
+        final MultiSet<T> multiset = makeObject();
+        multiset.add((T) "A");
+        multiset.add((T) "A");
+        final MultiSet.Entry<T> entry = multiset.entrySet().iterator().next();
+        assertEquals(2, entry.getCount());
+        multiset.remove("A");
+        assertEquals(1, entry.getCount());
+        multiset.remove("A");
+        assertEquals(0, entry.getCount());
+    }
+
+    @SuppressWarnings("unchecked")
     public void testMultiSetToArray() {
         if (!isAddSupported()) {
             return;
@@ -673,28 +689,28 @@ public abstract class AbstractMultiSetTest<T> extends AbstractCollectionTest<T> 
 
     /**
      * Compare the current serialized form of the MultiSet
-     * against the canonical version in SVN.
+     * against the canonical version in SCM.
      */
     public void testEmptyMultiSetCompatibility() throws IOException, ClassNotFoundException {
         // test to make sure the canonical form has been preserved
         final MultiSet<T> multiset = makeObject();
         if (multiset instanceof Serializable && !skipSerializedCanonicalTests() && isTestSerialization()) {
             final MultiSet<?> multiset2 = (MultiSet<?>) readExternalFormFromDisk(getCanonicalEmptyCollectionName(multiset));
-            assertTrue("MultiSet is empty",multiset2.size()  == 0);
+            assertTrue("MultiSet is empty", multiset2.size() == 0);
             assertEquals(multiset, multiset2);
         }
     }
 
     /**
      * Compare the current serialized form of the MultiSet
-     * against the canonical version in SVN.
+     * against the canonical version in SCM.
      */
     public void testFullMultiSetCompatibility() throws IOException, ClassNotFoundException {
         // test to make sure the canonical form has been preserved
         final MultiSet<T> multiset = makeFullCollection();
         if (multiset instanceof Serializable && !skipSerializedCanonicalTests() && isTestSerialization()) {
             final MultiSet<?> multiset2 = (MultiSet<?>) readExternalFormFromDisk(getCanonicalFullCollectionName(multiset));
-            assertEquals("MultiSet is the right size",multiset.size(), multiset2.size());
+            assertEquals("MultiSet is the right size", multiset.size(), multiset2.size());
             assertEquals(multiset, multiset2);
         }
     }

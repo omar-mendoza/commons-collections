@@ -19,10 +19,11 @@ package org.apache.commons.collections4.set;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.OrderedIterator;
@@ -31,23 +32,27 @@ import org.apache.commons.collections4.iterators.AbstractIteratorDecorator;
 import org.apache.commons.collections4.list.UnmodifiableList;
 
 /**
- * Decorates another <code>Set</code> to ensure that the order of addition is
+ * Decorates another {@code Set} to ensure that the order of addition is
  * retained and used by the iterator.
  * <p>
  * If an object is added to the set for a second time, it will remain in the
  * original position in the iteration. The order can be observed from the set
  * via the iterator or toArray methods.
+ * </p>
  * <p>
  * The ListOrderedSet also has various useful direct methods. These include many
- * from <code>List</code>, such as <code>get(int)</code>,
- * <code>remove(int)</code> and <code>indexOf(int)</code>. An unmodifiable
- * <code>List</code> view of the set can be obtained via <code>asList()</code>.
+ * from {@code List}, such as {@code get(int)},
+ * {@code remove(int)} and {@code indexOf(int)}. An unmodifiable
+ * {@code List} view of the set can be obtained via {@code asList()}.
+ * </p>
  * <p>
- * This class cannot implement the <code>List</code> interface directly as
+ * This class cannot implement the {@code List} interface directly as
  * various interface methods (notably equals/hashCode) are incompatible with a
  * set.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 3.1.
+ * </p>
  *
  * @param <E> the type of the elements in this set
  * @since 3.0
@@ -75,12 +80,8 @@ public class ListOrderedSet<E>
      * @since 4.0
      */
     public static <E> ListOrderedSet<E> listOrderedSet(final Set<E> set, final List<E> list) {
-        if (set == null) {
-            throw new NullPointerException("Set must not be null");
-        }
-        if (list == null) {
-            throw new NullPointerException("List must not be null");
-        }
+        Objects.requireNonNull(set, "set");
+        Objects.requireNonNull(list, "list");
         if (set.size() > 0 || list.size() > 0) {
             throw new IllegalArgumentException("Set and List must be empty");
         }
@@ -90,7 +91,7 @@ public class ListOrderedSet<E>
     /**
      * Factory method to create an ordered set.
      * <p>
-     * An <code>ArrayList</code> is used to retain order.
+     * An {@code ArrayList} is used to retain order.
      *
      * @param <E> the element type
      * @param set the set to decorate, must not be null
@@ -105,7 +106,7 @@ public class ListOrderedSet<E>
     /**
      * Factory method to create an ordered set using the supplied list to retain order.
      * <p>
-     * A <code>HashSet</code> is used for the set behaviour.
+     * A {@code HashSet} is used for the set behavior.
      * <p>
      * NOTE: If the list contains duplicates, the duplicates are removed,
      * altering the specified list.
@@ -117,9 +118,7 @@ public class ListOrderedSet<E>
      * @since 4.0
      */
     public static <E> ListOrderedSet<E> listOrderedSet(final List<E> list) {
-        if (list == null) {
-            throw new NullPointerException("List must not be null");
-        }
+        Objects.requireNonNull(list, "list");
         CollectionUtils.filter(list, UniquePredicate.uniquePredicate());
         final Set<E> set = new HashSet<>(list);
 
@@ -128,8 +127,8 @@ public class ListOrderedSet<E>
 
     // -----------------------------------------------------------------------
     /**
-     * Constructs a new empty <code>ListOrderedSet</code> using a
-     * <code>HashSet</code> and an <code>ArrayList</code> internally.
+     * Constructs a new empty {@code ListOrderedSet} using a
+     * {@code HashSet} and an {@code ArrayList} internally.
      *
      * @since 3.1
      */
@@ -142,7 +141,7 @@ public class ListOrderedSet<E>
      * Constructor that wraps (not copies).
      *
      * @param set the set to decorate, must not be null
-     * @throws IllegalArgumentException if set is null
+     * @throws NullPointerException if set is null
      */
     protected ListOrderedSet(final Set<E> set) {
         super(set);
@@ -161,10 +160,7 @@ public class ListOrderedSet<E>
      */
     protected ListOrderedSet(final Set<E> set, final List<E> list) {
         super(set);
-        if (list == null) {
-            throw new NullPointerException("List must not be null");
-        }
-        setOrder = list;
+        setOrder = Objects.requireNonNull(list, "list");
     }
 
     // -----------------------------------------------------------------------
@@ -216,6 +212,21 @@ public class ListOrderedSet<E>
         return result;
     }
 
+    /**
+     * @since 4.4
+     */
+    @Override
+    public boolean removeIf(final Predicate<? super E> filter) {
+        if (Objects.isNull(filter)) {
+            return false;
+        }
+        final boolean result = decorated().removeIf(filter);
+        if (result) {
+            setOrder.removeIf(filter);
+        }
+        return result;
+    }
+
     @Override
     public boolean removeAll(final Collection<?> coll) {
         boolean result = false;
@@ -229,9 +240,9 @@ public class ListOrderedSet<E>
      * {@inheritDoc}
      * <p>
      * This implementation iterates over the elements of this set, checking
-     * each element in turn to see if it's contained in <code>coll</code>.
+     * each element in turn to see if it's contained in {@code coll}.
      * If it's not contained, it's removed from this set. As a consequence,
-     * it is advised to use a collection type for <code>coll</code> that provides
+     * it is advised to use a collection type for {@code coll} that provides
      * a fast (e.g. O(1)) implementation of {@link Collection#contains(Object)}.
      */
     @Override
@@ -240,14 +251,10 @@ public class ListOrderedSet<E>
         if (result == false) {
             return false;
         }
-        if (decorated().size() == 0) {
+        if (decorated().isEmpty()) {
             setOrder.clear();
         } else {
-            for (final Iterator<E> it = setOrder.iterator(); it.hasNext();) {
-                if (!decorated().contains(it.next())) {
-                    it.remove();
-                }
-            }
+            setOrder.removeIf(e -> !decorated().contains(e));
         }
         return result;
     }

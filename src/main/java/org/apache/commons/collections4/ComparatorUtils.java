@@ -18,6 +18,7 @@ package org.apache.commons.collections4;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 
 import org.apache.commons.collections4.comparators.BooleanComparator;
 import org.apache.commons.collections4.comparators.ComparableComparator;
@@ -31,9 +32,10 @@ import org.apache.commons.collections4.comparators.TransformingComparator;
  * objects.
  * <p>
  * Most of the functionality in this class can also be found in the
- * <code>comparators</code> package. This class merely provides a
+ * {@code comparators} package. This class merely provides a
  * convenient central place if you have use for more than one class
- * in the <code>comparators</code> subpackage.
+ * in the {@code comparators} subpackage.
+ * </p>
  *
  * @since 2.1
  */
@@ -76,10 +78,7 @@ public class ComparatorUtils {
     public static <E> Comparator<E> chainedComparator(final Comparator<E>... comparators) {
         final ComparatorChain<E> chain = new ComparatorChain<>();
         for (final Comparator<E> comparator : comparators) {
-            if (comparator == null) {
-                throw new NullPointerException("Comparator cannot be null");
-            }
-            chain.addComparator(comparator);
+            chain.addComparator(Objects.requireNonNull(comparator, "comparator"));
         }
         return chain;
     }
@@ -119,12 +118,14 @@ public class ComparatorUtils {
      * Gets a Comparator that can sort Boolean objects.
      * <p>
      * The parameter specifies whether true or false is sorted first.
+     * </p>
      * <p>
      * The comparator throws NullPointerException if a null value is compared.
+     * </p>
      *
-     * @param trueFirst  when <code>true</code>, sort
-     *        <code>true</code> {@link Boolean}s before
-     *        <code>false</code> {@link Boolean}s.
+     * @param trueFirst  when {@code true}, sort
+     *        {@code true} {@link Boolean}s before
+     *        {@code false} {@link Boolean}s.
      * @return  a comparator that sorts booleans
      */
     public static Comparator<Boolean> booleanComparator(final boolean trueFirst) {
@@ -132,11 +133,12 @@ public class ComparatorUtils {
     }
 
     /**
-     * Gets a Comparator that controls the comparison of <code>null</code> values.
+     * Gets a Comparator that controls the comparison of {@code null} values.
      * <p>
      * The returned comparator will consider a null value to be less than
      * any nonnull value, and equal to any other null value.  Two nonnull
      * values will be evaluated with the given comparator.
+     * </p>
      *
      * @param <E>  the object type to compare
      * @param comparator the comparator that wants to allow nulls
@@ -152,11 +154,12 @@ public class ComparatorUtils {
     }
 
     /**
-     * Gets a Comparator that controls the comparison of <code>null</code> values.
+     * Gets a Comparator that controls the comparison of {@code null} values.
      * <p>
      * The returned comparator will consider a null value to be greater than
      * any nonnull value, and equal to any other null value.  Two nonnull
      * values will be evaluated with the given comparator.
+     * </p>
      *
      * @param <E>  the object type to compare
      * @param comparator the comparator that wants to allow nulls
@@ -177,6 +180,7 @@ public class ComparatorUtils {
      * Objects passed to the returned comparator will first be transformed
      * by the given transformer before they are compared by the given
      * comparator.
+     * </p>
      *
      * @param <I>  the input object type of the transformed comparator
      * @param <O>  the object type of the decorated comparator

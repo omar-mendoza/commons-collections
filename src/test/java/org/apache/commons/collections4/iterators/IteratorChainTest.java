@@ -91,12 +91,7 @@ public class IteratorChainTest extends AbstractIteratorTest<String> {
 
     public void testRemoveFromFilteredIterator() {
 
-        final Predicate<Integer> myPredicate = new Predicate<Integer>() {
-            @Override
-            public boolean evaluate(final Integer i) {
-                return i.compareTo(Integer.valueOf(4)) < 0;
-            }
-        };
+        final Predicate<Integer> myPredicate = i -> i.compareTo(Integer.valueOf(4)) < 0;
 
         final List<Integer> list1 = new ArrayList<>();
         final List<Integer> list2 = new ArrayList<>();
@@ -139,9 +134,9 @@ public class IteratorChainTest extends AbstractIteratorTest<String> {
             }
         }
 
-        assertTrue("List is empty",list1.size() == 0);
-        assertTrue("List is empty",list2.size() == 1);
-        assertTrue("List is empty",list3.size() == 0);
+        assertTrue("List is empty", list1.size() == 0);
+        assertTrue("List is empty", list2.size() == 1);
+        assertTrue("List is empty", list3.size() == 0);
     }
 
     public void testFirstIteratorIsEmptyBug() {
@@ -153,13 +148,13 @@ public class IteratorChainTest extends AbstractIteratorTest<String> {
         final IteratorChain<String> chain = new IteratorChain<>();
         chain.addIterator(empty.iterator());
         chain.addIterator(notEmpty.iterator());
-        assertTrue("should have next",chain.hasNext());
-        assertEquals("A",chain.next());
-        assertTrue("should have next",chain.hasNext());
-        assertEquals("B",chain.next());
-        assertTrue("should have next",chain.hasNext());
-        assertEquals("C",chain.next());
-        assertTrue("should not have next",!chain.hasNext());
+        assertTrue("should have next", chain.hasNext());
+        assertEquals("A", chain.next());
+        assertTrue("should have next", chain.hasNext());
+        assertEquals("B", chain.next());
+        assertTrue("should have next", chain.hasNext());
+        assertEquals("C", chain.next());
+        assertTrue("should not have next", !chain.hasNext());
     }
 
     public void testEmptyChain() {

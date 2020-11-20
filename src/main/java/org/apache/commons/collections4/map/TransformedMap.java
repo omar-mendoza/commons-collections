@@ -25,21 +25,23 @@ import java.util.Map;
 import org.apache.commons.collections4.Transformer;
 
 /**
- * Decorates another <code>Map</code> to transform objects that are added.
+ * Decorates another {@code Map} to transform objects that are added.
  * <p>
  * The Map put methods and Map.Entry setValue method are affected by this class.
  * Thus objects must be removed or searched for using their transformed form.
  * For example, if the transformation converts Strings to Integers, you must
  * use the Integer form to remove objects.
+ * </p>
  * <p>
  * <strong>Note that TransformedMap is not synchronized and is not thread-safe.</strong>
  * If you wish to use this map from multiple threads concurrently, you must use
  * appropriate synchronization. The simplest approach is to wrap this map
  * using {@link java.util.Collections#synchronizedMap(Map)}. This class may throw
  * exceptions when accessed by concurrent threads without synchronization.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 3.1.
- * <p>
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -209,7 +211,7 @@ public class TransformedMap<K, V>
     }
 
     /**
-     * Override to transform the value when using <code>setValue</code>.
+     * Override to transform the value when using {@code setValue}.
      *
      * @param value  the value to transform
      * @return the transformed value

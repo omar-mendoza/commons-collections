@@ -40,37 +40,42 @@ import org.apache.commons.collections4.keyvalue.AbstractMapEntry;
 import org.apache.commons.collections4.list.UnmodifiableList;
 
 /**
- * Decorates a <code>Map</code> to ensure that the order of addition is retained
- * using a <code>List</code> to maintain order.
+ * Decorates a {@code Map} to ensure that the order of addition is retained
+ * using a {@code List} to maintain order.
  * <p>
  * The order will be used via the iterators and toArray methods on the views.
- * The order is also returned by the <code>MapIterator</code>.
- * The <code>orderedMapIterator()</code> method accesses an iterator that can
+ * The order is also returned by the {@code MapIterator}.
+ * The {@code orderedMapIterator()} method accesses an iterator that can
  * iterate both forwards and backwards through the map.
  * In addition, non-interface methods are provided to access the map by index.
+ * </p>
  * <p>
  * If an object is added to the Map for a second time, it will remain in the
  * original position in the iteration.
+ * </p>
  * <p>
  * <strong>Note that ListOrderedMap is not synchronized and is not thread-safe.</strong>
  * If you wish to use this map from multiple threads concurrently, you must use
  * appropriate synchronization. The simplest approach is to wrap this map
  * using {@link java.util.Collections#synchronizedMap(Map)}. This class may throw
  * exceptions when accessed by concurrent threads without synchronization.
+ * </p>
  * <p>
  * <strong>Note that ListOrderedMap doesn't work with
  * {@link java.util.IdentityHashMap IdentityHashMap}, {@link CaseInsensitiveMap},
  * or similar maps that violate the general contract of {@link java.util.Map}.</strong>
- * The <code>ListOrderedMap</code> (or, more precisely, the underlying <code>List</code>)
+ * The {@code ListOrderedMap} (or, more precisely, the underlying {@code List})
  * is relying on {@link Object#equals(Object) equals()}. This is fine, as long as the
- * decorated <code>Map</code> is also based on {@link Object#equals(Object) equals()},
+ * decorated {@code Map} is also based on {@link Object#equals(Object) equals()},
  * and {@link Object#hashCode() hashCode()}, which
  * {@link java.util.IdentityHashMap IdentityHashMap}, and
- * {@link CaseInsensitiveMap} don't: The former uses <code>==</code>, and
+ * {@link CaseInsensitiveMap} don't: The former uses {@code ==}, and
  * the latter uses {@link Object#equals(Object) equals()} on a lower-cased
  * key.
+ * </p>
  * <p>
  * This class is {@link Serializable} starting with Commons Collections 3.1.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -89,7 +94,7 @@ public class ListOrderedMap<K, V>
     /**
      * Factory method to create an ordered map.
      * <p>
-     * An <code>ArrayList</code> is used to retain order.
+     * An {@code ArrayList} is used to retain order.
      *
      * @param <K>  the key type
      * @param <V>  the value type
@@ -104,8 +109,8 @@ public class ListOrderedMap<K, V>
 
     //-----------------------------------------------------------------------
     /**
-     * Constructs a new empty <code>ListOrderedMap</code> that decorates
-     * a <code>HashMap</code>.
+     * Constructs a new empty {@code ListOrderedMap} that decorates
+     * a {@code HashMap}.
      *
      * @since 3.1
      */
@@ -474,7 +479,7 @@ public class ListOrderedMap<K, V>
      * Removes the element at the specified index.
      *
      * @param index  the index of the object to remove
-     * @return the removed value, or <code>null</code> if none existed
+     * @return the removed value, or {@code null} if none existed
      * @throws IndexOutOfBoundsException if the index is invalid
      */
     public V remove(final int index) {
@@ -595,7 +600,7 @@ public class ListOrderedMap<K, V>
         private final List<K> insertOrder;
         private Set<Map.Entry<K, V>> entrySet;
 
-        public EntrySetView(final ListOrderedMap<K, V> parent, final List<K> insertOrder) {
+        EntrySetView(final ListOrderedMap<K, V> parent, final List<K> insertOrder) {
             super();
             this.parent = parent;
             this.insertOrder = insertOrder;

@@ -18,7 +18,6 @@ package org.apache.commons.collections4.bag;
 
 import junit.framework.Test;
 
-import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.BulkTest;
 import org.apache.commons.collections4.SortedBag;
 import org.apache.commons.collections4.Transformer;
@@ -56,26 +55,26 @@ public class TransformedSortedBagTest<T> extends AbstractSortedBagTest<T> {
         for (int i = 0; i < els.length; i++) {
             bag.add((T) els[i]);
             assertEquals(i + 1, bag.size());
-            assertEquals(true, bag.contains(Integer.valueOf((String) els[i])));
+            assertTrue(bag.contains(Integer.valueOf((String) els[i])));
         }
 
-        assertEquals(true, bag.remove(Integer.valueOf((String) els[0])));
+        assertTrue(bag.remove(Integer.valueOf((String) els[0])));
 
     }
 
     public void testTransformedBag_decorateTransform() {
-        final Bag<Object> originalBag = new TreeBag<>();
+        final TreeBag<T> originalBag = new TreeBag<>();
         final Object[] els = new Object[] {"1", "3", "5", "7", "2", "4", "6"};
         for (final Object el : els) {
-            originalBag.add(el);
+            originalBag.add((T) el);
         }
-        final Bag<?> bag = TransformedBag.transformedBag(originalBag, TransformedCollectionTest.STRING_TO_INTEGER_TRANSFORMER);
+        final SortedBag<T> bag = TransformedSortedBag.transformedSortedBag(originalBag, (Transformer<T, T>) TransformedCollectionTest.STRING_TO_INTEGER_TRANSFORMER);
         assertEquals(els.length, bag.size());
         for (final Object el : els) {
-            assertEquals(true, bag.contains(Integer.valueOf((String) el)));
+            assertTrue(bag.contains(Integer.valueOf((String) el)));
         }
 
-        assertEquals(true, bag.remove(Integer.valueOf((String) els[0])));
+        assertTrue(bag.remove(Integer.valueOf((String) els[0])));
     }
 
     @Override

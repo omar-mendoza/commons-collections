@@ -17,10 +17,13 @@
 package org.apache.commons.collections4.comparators;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Tests for {@link BooleanComparator}.
@@ -46,14 +49,8 @@ public class BooleanComparatorTest extends AbstractComparatorTest<Boolean> {
 
     @Override
     public List<Boolean> getComparableObjectsOrdered() {
-        final List<Boolean> list = new ArrayList<>();
-        list.add(new Boolean(false));
-        list.add(Boolean.FALSE);
-        list.add(new Boolean(false));
-        list.add(Boolean.TRUE);
-        list.add(new Boolean(true));
-        list.add(true);
-        return list;
+        return new ArrayList<>(Arrays.asList(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE,
+                true));
     }
 
     @Override
@@ -70,33 +67,33 @@ public class BooleanComparatorTest extends AbstractComparatorTest<Boolean> {
 
     @Test
     public void testConstructors() {
-        allTests(false,new BooleanComparator());
-        allTests(false,new BooleanComparator(false));
-        allTests(true,new BooleanComparator(true));
+        allTests(false, new BooleanComparator());
+        allTests(false, new BooleanComparator(false));
+        allTests(true, new BooleanComparator(true));
     }
 
     @Test
 
     public void testStaticFactoryMethods() {
-        allTests(false,BooleanComparator.getFalseFirstComparator());
-        allTests(false,BooleanComparator.booleanComparator(false));
-        allTests(true,BooleanComparator.getTrueFirstComparator());
-        allTests(true,BooleanComparator.booleanComparator(true));
+        allTests(false, BooleanComparator.getFalseFirstComparator());
+        allTests(false, BooleanComparator.booleanComparator(false));
+        allTests(true, BooleanComparator.getTrueFirstComparator());
+        allTests(true, BooleanComparator.booleanComparator(true));
     }
 
     @Test
     public void testEqualsCompatibleInstance() {
-        assertEquals(new BooleanComparator(),new BooleanComparator(false));
-        assertEquals(new BooleanComparator(false),new BooleanComparator(false));
-        assertEquals(new BooleanComparator(false),BooleanComparator.getFalseFirstComparator());
-        assertSame(BooleanComparator.getFalseFirstComparator(),BooleanComparator.booleanComparator(false));
+        assertEquals(new BooleanComparator(), new BooleanComparator(false));
+        assertEquals(new BooleanComparator(false), new BooleanComparator(false));
+        assertEquals(new BooleanComparator(false), BooleanComparator.getFalseFirstComparator());
+        assertSame(BooleanComparator.getFalseFirstComparator(), BooleanComparator.booleanComparator(false));
 
-        assertEquals(new BooleanComparator(true),new BooleanComparator(true));
-        assertEquals(new BooleanComparator(true),BooleanComparator.getTrueFirstComparator());
-        assertSame(BooleanComparator.getTrueFirstComparator(),BooleanComparator.booleanComparator(true));
+        assertEquals(new BooleanComparator(true), new BooleanComparator(true));
+        assertEquals(new BooleanComparator(true), BooleanComparator.getTrueFirstComparator());
+        assertSame(BooleanComparator.getTrueFirstComparator(), BooleanComparator.booleanComparator(true));
 
-        assertTrue(!new BooleanComparator().equals(new BooleanComparator(true)));
-        assertTrue(!new BooleanComparator(true).equals(new BooleanComparator(false)));
+        assertNotEquals(new BooleanComparator(), new BooleanComparator(true));
+        assertNotEquals(new BooleanComparator(true), new BooleanComparator(false));
     }
 
     // utilities
@@ -104,7 +101,7 @@ public class BooleanComparatorTest extends AbstractComparatorTest<Boolean> {
 
     protected void allTests(final boolean trueFirst, final BooleanComparator comp) {
         orderIndependentTests(comp);
-        if(trueFirst) {
+        if (trueFirst) {
             trueFirstTests(comp);
         } else {
             falseFirstTests(comp);
@@ -113,16 +110,16 @@ public class BooleanComparatorTest extends AbstractComparatorTest<Boolean> {
 
     protected void trueFirstTests(final BooleanComparator comp) {
         assertNotNull(comp);
-        assertEquals(0,comp.compare(true, true));
-        assertEquals(0,comp.compare(false, false));
+        assertEquals(0, comp.compare(true, true));
+        assertEquals(0, comp.compare(false, false));
         assertTrue(comp.compare(false, true) > 0);
         assertTrue(comp.compare(true, false) < 0);
     }
 
     protected void falseFirstTests(final BooleanComparator comp) {
         assertNotNull(comp);
-        assertEquals(0,comp.compare(true, true));
-        assertEquals(0,comp.compare(false, false));
+        assertEquals(0, comp.compare(true, true));
+        assertEquals(0, comp.compare(false, false));
         assertTrue(comp.compare(false, true) < 0);
         assertTrue(comp.compare(true, false) > 0);
     }
@@ -134,35 +131,34 @@ public class BooleanComparatorTest extends AbstractComparatorTest<Boolean> {
     protected void nullArgumentTests(final BooleanComparator comp) {
         assertNotNull(comp);
         try {
-            comp.compare(null,null);
+            comp.compare(null, null);
             fail("Expected NullPointerException");
-        } catch(final NullPointerException e) {
+        } catch (final NullPointerException e) {
             // expected
         }
         try {
-            comp.compare(Boolean.TRUE,null);
+            comp.compare(Boolean.TRUE, null);
             fail("Expected NullPointerException");
-        } catch(final NullPointerException e) {
+        } catch (final NullPointerException e) {
             // expected
         }
         try {
-            comp.compare(Boolean.FALSE,null);
+            comp.compare(Boolean.FALSE, null);
             fail("Expected NullPointerException");
-        } catch(final NullPointerException e) {
+        } catch (final NullPointerException e) {
             // expected
         }
         try {
-            comp.compare(null,Boolean.TRUE);
+            comp.compare(null, Boolean.TRUE);
             fail("Expected NullPointerException");
-        } catch(final NullPointerException e) {
+        } catch (final NullPointerException e) {
             // expected
         }
         try {
-            comp.compare(null,Boolean.FALSE);
+            comp.compare(null, Boolean.FALSE);
             fail("Expected NullPointerException");
-        } catch(final NullPointerException e) {
+        } catch (final NullPointerException e) {
             // expected
         }
     }
-
 }

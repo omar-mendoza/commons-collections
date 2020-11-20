@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Queue;
 
 import org.apache.commons.collections4.BoundedCollection;
@@ -36,12 +37,15 @@ import org.apache.commons.collections4.BoundedCollection;
  * The removal order of a {@link CircularFifoQueue} is based on the
  * insertion order; elements are removed in the same order in which they
  * were added.  The iteration order is the same as the removal order.
+ * </p>
  * <p>
- * The {@link #add(Object)}, {@link #remove()}, {@link #peek()}, {@link #poll},
+ * The {@link #add(Object)}, {@link #remove()}, {@link #peek()}, {@link #poll()},
  * {@link #offer(Object)} operations all perform in constant time.
  * All other operations perform in linear time or worse.
+ * </p>
  * <p>
  * This queue prevents null objects from being added.
+ * </p>
  *
  * @param <E> the type of elements in this collection
  * @since 4.0
@@ -232,9 +236,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
      */
     @Override
     public boolean add(final E element) {
-        if (null == element) {
-            throw new NullPointerException("Attempted to add null object to queue");
-        }
+        Objects.requireNonNull(element, "element");
 
         if (isAtFullCapacity()) {
             remove();
@@ -264,7 +266,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
         final int sz = size();
         if (index < 0 || index >= sz) {
             throw new NoSuchElementException(
-                    String.format("The specified index (%1$d) is outside the available range [0, %2$d)",
+                    String.format("The specified index %1$d is outside the available range [0, %2$d)",
                                   Integer.valueOf(index), Integer.valueOf(sz)));
         }
 

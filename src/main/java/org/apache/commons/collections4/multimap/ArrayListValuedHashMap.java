@@ -36,6 +36,7 @@ import org.apache.commons.collections4.MultiValuedMap;
  * thread-safe.</strong> If you wish to use this map from multiple threads
  * concurrently, you must use appropriate synchronization. This class may throw
  * exceptions when accessed by concurrent threads without synchronization.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -95,7 +96,7 @@ public class ArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V>
     /**
      * Creates an ArrayListValuedHashMap copying all the mappings of the given map.
      *
-     * @param map a <code>MultiValuedMap</code> to copy into this map
+     * @param map a {@code MultiValuedMap} to copy into this map
      */
     public ArrayListValuedHashMap(final MultiValuedMap<? extends K, ? extends V> map) {
         this(map.size(), DEFAULT_INITIAL_LIST_CAPACITY);
@@ -105,7 +106,7 @@ public class ArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V>
     /**
      * Creates an ArrayListValuedHashMap copying all the mappings of the given map.
      *
-     * @param map a <code>Map</code> to copy into this map
+     * @param map a {@code Map} to copy into this map
      */
     public ArrayListValuedHashMap(final Map<? extends K, ? extends V> map) {
         this(map.size(), DEFAULT_INITIAL_LIST_CAPACITY);

@@ -16,13 +16,17 @@
  */
 package org.apache.commons.collections4.iterators;
 
+import java.util.Objects;
+
 import org.apache.commons.collections4.OrderedMapIterator;
 
 /**
- * Provides basic behaviour for decorating an ordered map iterator with extra functionality.
+ * Provides basic behavior for decorating an ordered map iterator with extra functionality.
  * <p>
  * All methods are forwarded to the decorated map iterator.
  *
+ * @param <K> the type of keys
+ * @param <V> the type of mapped values
  * @since 3.0
  */
 public class AbstractOrderedMapIteratorDecorator<K, V> implements OrderedMapIterator<K, V> {
@@ -39,10 +43,7 @@ public class AbstractOrderedMapIteratorDecorator<K, V> implements OrderedMapIter
      */
     public AbstractOrderedMapIteratorDecorator(final OrderedMapIterator<K, V> iterator) {
         super();
-        if (iterator == null) {
-            throw new NullPointerException("OrderedMapIterator must not be null");
-        }
-        this.iterator = iterator;
+        this.iterator = Objects.requireNonNull(iterator, "iterator");
     }
 
     /**

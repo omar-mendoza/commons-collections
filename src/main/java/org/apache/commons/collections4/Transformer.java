@@ -20,20 +20,23 @@ package org.apache.commons.collections4;
  * Defines a functor interface implemented by classes that transform one
  * object into another.
  * <p>
- * A <code>Transformer</code> converts the input object to the output object.
+ * A {@code Transformer} converts the input object to the output object.
  * The input object should be left unchanged.
  * Transformers are typically used for type conversions, or extracting data
  * from an object.
+ * </p>
  * <p>
  * Standard implementations of common transformers are provided by
  * {@link TransformerUtils}. These include method invocation, returning a constant,
  * cloning and returning the string value.
+ * </p>
  *
  * @param <I> the input type to the transformer
  * @param <O> the output type from the transformer
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface Transformer<I, O> {
 
     /**

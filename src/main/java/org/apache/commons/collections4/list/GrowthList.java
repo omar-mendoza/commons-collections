@@ -22,31 +22,37 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Decorates another <code>List</code> to make it seamlessly grow when
+ * Decorates another {@code List} to make it seamlessly grow when
  * indices larger than the list size are used on add and set,
  * avoiding most IndexOutOfBoundsExceptions.
  * <p>
  * This class avoids errors by growing when a set or add method would
  * normally throw an IndexOutOfBoundsException.
  * Note that IndexOutOfBoundsException IS returned for invalid negative indices.
+ * </p>
  * <p>
  * Trying to set or add to an index larger than the size will cause the list
- * to grow (using <code>null</code> elements). Clearly, care must be taken
+ * to grow (using {@code null} elements). Clearly, care must be taken
  * not to use excessively large indices, as the internal list will grow to
  * match.
+ * </p>
  * <p>
  * Trying to use any method other than add or set with an invalid index will
  * call the underlying list and probably result in an IndexOutOfBoundsException.
+ * </p>
  * <p>
- * Take care when using this list with <code>null</code> values, as
- * <code>null</code> is the value added when growing the list.
+ * Take care when using this list with {@code null} values, as
+ * {@code null} is the value added when growing the list.
+ * </p>
  * <p>
  * All sub-lists will access the underlying list directly, and will throw
  * IndexOutOfBoundsExceptions.
+ * </p>
  * <p>
  * This class differs from {@link LazyList} because here growth occurs on
- * set and add, where <code>LazyList</code> grows on get. However, they
+ * set and add, where {@code LazyList} grows on get. However, they
  * can be used together by decorating twice.
+ * </p>
  *
  * @see LazyList
  * @since 3.2
@@ -80,11 +86,11 @@ public class GrowthList<E> extends AbstractSerializableListDecorator<E> {
     /**
      * Constructor that uses an ArrayList internally.
      *
-     * @param initialSize  the initial size of the ArrayList
-     * @throws IllegalArgumentException if initial size is invalid
+     * @param initialCapacity  the initial capacity of the ArrayList
+     * @throws IllegalArgumentException if initial capacity is invalid
      */
-    public GrowthList(final int initialSize) {
-        super(new ArrayList<E>(initialSize));
+    public GrowthList(final int initialCapacity) {
+        super(new ArrayList<E>(initialCapacity));
     }
 
     /**
@@ -99,11 +105,11 @@ public class GrowthList<E> extends AbstractSerializableListDecorator<E> {
 
     //-----------------------------------------------------------------------
     /**
-     * Decorate the add method to perform the growth behaviour.
+     * Decorate the add method to perform the growth behavior.
      * <p>
      * If the requested index is greater than the current size, the list will
      * grow to the new size. Indices between the old size and the requested
-     * size will be filled with <code>null</code>.
+     * size will be filled with {@code null}.
      * <p>
      * If the index is less than the current size, the value will be added to
      * the underlying list directly.
@@ -127,11 +133,11 @@ public class GrowthList<E> extends AbstractSerializableListDecorator<E> {
 
     //-----------------------------------------------------------------------
     /**
-     * Decorate the addAll method to perform the growth behaviour.
+     * Decorate the addAll method to perform the growth behavior.
      * <p>
      * If the requested index is greater than the current size, the list will
      * grow to the new size. Indices between the old size and the requested
-     * size will be filled with <code>null</code>.
+     * size will be filled with {@code null}.
      * <p>
      * If the index is less than the current size, the values will be added to
      * the underlying list directly.
@@ -153,16 +159,16 @@ public class GrowthList<E> extends AbstractSerializableListDecorator<E> {
             decorated().addAll(Collections.<E>nCopies(index - size, null));
             result = true;
         }
-        return decorated().addAll(index, coll) | result;
+        return decorated().addAll(index, coll) || result;
     }
 
     //-----------------------------------------------------------------------
     /**
-     * Decorate the set method to perform the growth behaviour.
+     * Decorate the set method to perform the growth behavior.
      * <p>
      * If the requested index is greater than the current size, the list will
      * grow to the new size. Indices between the old size and the requested
-     * size will be filled with <code>null</code>.
+     * size will be filled with {@code null}.
      * <p>
      * If the index is less than the current size, the value will be set onto
      * the underlying list directly.

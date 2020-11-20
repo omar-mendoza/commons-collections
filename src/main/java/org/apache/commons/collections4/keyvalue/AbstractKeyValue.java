@@ -19,9 +19,11 @@ package org.apache.commons.collections4.keyvalue;
 import org.apache.commons.collections4.KeyValue;
 
 /**
- * Abstract pair class to assist with creating <code>KeyValue</code>
+ * Abstract pair class to assist with creating {@code KeyValue}
  * and {@link java.util.Map.Entry Map.Entry} implementations.
  *
+ * @param <K> the type of keys
+ * @param <V> the type of values
  * @since 3.0
  */
 public abstract class AbstractKeyValue<K, V> implements KeyValue<K, V> {

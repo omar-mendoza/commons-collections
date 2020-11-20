@@ -29,6 +29,7 @@ import org.apache.commons.collections4.Transformer;
  * in order to prevent potential remote code execution exploits. Please refer to
  * <a href="https://issues.apache.org/jira/browse/COLLECTIONS-580">COLLECTIONS-580</a>
  * for more details.
+ * </p>
  *
  * @since 3.0
  */
@@ -49,7 +50,6 @@ public class InstantiateTransformer<T> implements Transformer<Class<? extends T>
      * @param <T>  the type of the objects to be created
      * @return Transformer&lt;Class&lt;? extends T&gt;, T&gt;
      */
-    @SuppressWarnings("unchecked")
     public static <T> Transformer<Class<? extends T>, T> instantiateTransformer() {
         return NO_ARG_INSTANCE;
     }
@@ -88,7 +88,7 @@ public class InstantiateTransformer<T> implements Transformer<Class<? extends T>
 
     /**
      * Constructor that performs no validation.
-     * Use <code>instantiateTransformer</code> if you want that.
+     * Use {@code instantiateTransformer} if you want that.
      * <p>
      * Note: from 4.0, the input parameters will be cloned
      *

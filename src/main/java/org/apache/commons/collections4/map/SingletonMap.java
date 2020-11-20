@@ -34,23 +34,26 @@ import org.apache.commons.collections4.iterators.SingletonIterator;
 import org.apache.commons.collections4.keyvalue.TiedMapEntry;
 
 /**
- * A <code>Map</code> implementation that holds a single item and is fixed size.
+ * A {@code Map} implementation that holds a single item and is fixed size.
  * <p>
  * The single key/value pair is specified at creation.
  * The map is fixed size so any action that would change the size is disallowed.
- * However, the <code>put</code> or <code>setValue</code> methods can <i>change</i>
+ * However, the {@code put} or {@code setValue} methods can <i>change</i>
  * the value associated with the key.
+ * </p>
  * <p>
  * If trying to remove or clear the map, an UnsupportedOperationException is thrown.
  * If trying to put a new mapping into the map, an  IllegalArgumentException is thrown.
  * The put method will only succeed if the key specified is the same as the
  * singleton key.
+ * </p>
  * <p>
  * The key and value can be obtained by:
+ * </p>
  * <ul>
  * <li>normal Map methods and views
- * <li>the <code>MapIterator</code>, see {@link #mapIterator()}
- * <li>the <code>KeyValue</code> interface (just cast - no object creation)
+ * <li>the {@code MapIterator}, see {@link #mapIterator()}
+ * <li>the {@code KeyValue} interface (just cast - no object creation)
  * </ul>
  *
  * @param <K> the type of the keys in this map
@@ -69,7 +72,7 @@ public class SingletonMap<K, V>
     private V value;
 
     /**
-     * Constructor that creates a map of <code>null</code> to <code>null</code>.
+     * Constructor that creates a map of {@code null} to {@code null}.
      */
     public SingletonMap() {
         super();
@@ -89,7 +92,7 @@ public class SingletonMap<K, V>
     }
 
     /**
-     * Constructor specifying the key and value as a <code>KeyValue</code>.
+     * Constructor specifying the key and value as a {@code KeyValue}.
      *
      * @param keyValue  the key value pair to use
      */
@@ -100,7 +103,7 @@ public class SingletonMap<K, V>
     }
 
     /**
-     * Constructor specifying the key and value as a <code>MapEntry</code>.
+     * Constructor specifying the key and value as a {@code MapEntry}.
      *
      * @param mapEntry  the mapEntry to use
      */
@@ -276,16 +279,16 @@ public class SingletonMap<K, V>
     @Override
     public void putAll(final Map<? extends K, ? extends V> map) {
         switch (map.size()) {
-            case 0:
-                return;
+        case 0:
+            return;
 
-            case 1:
-                final Map.Entry<? extends K, ? extends V> entry = map.entrySet().iterator().next();
-                put(entry.getKey(), entry.getValue());
-                return;
+        case 1:
+            final Map.Entry<? extends K, ? extends V> entry = map.entrySet().iterator().next();
+            put(entry.getKey(), entry.getValue());
+            return;
 
-            default:
-                throw new IllegalArgumentException("The map size must be 0 or 1");
+        default:
+            throw new IllegalArgumentException("The map size must be 0 or 1");
         }
     }
 
@@ -312,7 +315,7 @@ public class SingletonMap<K, V>
     //-----------------------------------------------------------------------
     /**
      * Gets the entrySet view of the map.
-     * Changes made via <code>setValue</code> affect this map.
+     * Changes made via {@code setValue} affect this map.
      * To simply iterate through the entries, use {@link #mapIterator()}.
      *
      * @return the entrySet view
@@ -569,11 +572,11 @@ public class SingletonMap<K, V>
         if (obj instanceof Map == false) {
             return false;
         }
-        final Map<?,?> other = (Map<?,?>) obj;
+        final Map<?, ?> other = (Map<?, ?>) obj;
         if (other.size() != 1) {
             return false;
         }
-        final Map.Entry<?,?> entry = other.entrySet().iterator().next();
+        final Map.Entry<?, ?> entry = other.entrySet().iterator().next();
         return isEqualKey(entry.getKey()) && isEqualValue(entry.getValue());
     }
 

@@ -44,7 +44,7 @@ public abstract class AbstractMockPredicateTest<T> {
     private final T testValue;
 
     /**
-     * Creates a new <code>PredicateTestBase</code>.
+     * Creates a new {@code PredicateTestBase}.
      *
      * @param testValue the value to pass to mock predicates.
      */
@@ -56,8 +56,7 @@ public abstract class AbstractMockPredicateTest<T> {
      * Creates the list of predicates to verify.
      */
     @Before
-    public final void createVerifyList()
-    {
+    public final void createVerifyList() {
         mockPredicatesToVerify = new ArrayList<>();
     }
 
@@ -65,8 +64,7 @@ public abstract class AbstractMockPredicateTest<T> {
      * Verifies all the mock predicates created for the test.
      */
     @After
-    public final void verifyPredicates()
-    {
+    public final void verifyPredicates() {
         for (final Predicate<? super T> predicate : mockPredicatesToVerify) {
             verify(predicate);
         }
@@ -88,7 +86,7 @@ public abstract class AbstractMockPredicateTest<T> {
      *
      * @return a single mock predicate.
      */
-    @SuppressWarnings({"unchecked", "boxing"})
+    @SuppressWarnings({"boxing"})
     protected final Predicate<T> createMockPredicate(final Boolean returnValue) {
         final Predicate<T> mockPredicate = EasyMock.createMock(Predicate.class);
         if (returnValue != null) {

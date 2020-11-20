@@ -26,14 +26,16 @@ import java.util.Map;
 import org.apache.commons.collections4.Predicate;
 
 /**
- * Decorates another <code>Map</code> to validate that additions
+ * Decorates another {@code Map} to validate that additions
  * match a specified predicate.
  * <p>
  * This map exists to provide validation for the decorated map.
  * It is normally created to decorate an empty map.
  * If an object cannot be added to the map, an IllegalArgumentException is thrown.
+ * </p>
  * <p>
  * One usage would be to ensure that no null keys are added to the map.
+ * </p>
  * <pre>Map map = PredicatedSet.decorate(new HashMap(), NotNullPredicate.INSTANCE, null);</pre>
  * <p>
  * <strong>Note that PredicatedMap is not synchronized and is not thread-safe.</strong>
@@ -41,8 +43,10 @@ import org.apache.commons.collections4.Predicate;
  * appropriate synchronization. The simplest approach is to wrap this map
  * using {@link java.util.Collections#synchronizedMap(Map)}. This class may throw
  * exceptions when accessed by concurrent threads without synchronization.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 3.1.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -149,7 +153,7 @@ public class PredicatedMap<K, V>
     }
 
     /**
-     * Override to validate an object set into the map via <code>setValue</code>.
+     * Override to validate an object set into the map via {@code setValue}.
      *
      * @param value  the value to validate
      * @return the value itself

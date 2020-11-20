@@ -16,6 +16,8 @@
  */
 package org.apache.commons.collections4.iterators;
 
+import java.util.Objects;
+
 import org.apache.commons.collections4.OrderedMapIterator;
 import org.apache.commons.collections4.Unmodifiable;
 
@@ -23,7 +25,10 @@ import org.apache.commons.collections4.Unmodifiable;
  * Decorates an ordered map iterator such that it cannot be modified.
  * <p>
  * Attempts to modify it will result in an UnsupportedOperationException.
+ * </p>
  *
+ * @param <K> the type of keys
+ * @param <V> the type of mapped values
  * @since 3.0
  */
 public final class UnmodifiableOrderedMapIterator<K, V> implements OrderedMapIterator<K, V>,
@@ -44,10 +49,7 @@ public final class UnmodifiableOrderedMapIterator<K, V> implements OrderedMapIte
      */
     public static <K, V> OrderedMapIterator<K, V> unmodifiableOrderedMapIterator(
             final OrderedMapIterator<K, ? extends V> iterator) {
-
-        if (iterator == null) {
-            throw new NullPointerException("OrderedMapIterator must not be null");
-        }
+        Objects.requireNonNull(iterator, "iterator");
         if (iterator instanceof Unmodifiable) {
             @SuppressWarnings("unchecked") // safe to upcast
             final OrderedMapIterator<K, V> tmpIterator = (OrderedMapIterator<K, V>) iterator;

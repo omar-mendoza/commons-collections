@@ -33,6 +33,7 @@ import org.apache.commons.collections4.multimap.UnmodifiableMultiValuedMap;
  * <p>
  * It contains various type safe and null safe methods. Additionally, it provides
  * the following decorators:
+ * </p>
  * <ul>
  *   <li>{@link #unmodifiableMultiValuedMap(MultiValuedMap)}</li>
  *   <li>{@link #transformedMultiValuedMap(MultiValuedMap, Transformer, Transformer)}</li>
@@ -43,7 +44,7 @@ import org.apache.commons.collections4.multimap.UnmodifiableMultiValuedMap;
 public class MultiMapUtils {
 
     /**
-     * <code>MultiMapUtils</code> should not normally be instantiated.
+     * {@code MultiMapUtils} should not normally be instantiated.
      */
     private MultiMapUtils() {}
 
@@ -59,7 +60,7 @@ public class MultiMapUtils {
      *
      * @param <K> the type of key in the map
      * @param <V> the type of value in the map
-     * @return immutable and empty <code>MultiValuedMap</code>
+     * @return immutable and empty {@code MultiValuedMap}
      */
     @SuppressWarnings("unchecked")
     public static <K, V> MultiValuedMap<K, V> emptyMultiValuedMap() {
@@ -69,8 +70,8 @@ public class MultiMapUtils {
     // Null safe methods
 
     /**
-     * Returns an immutable empty <code>MultiValuedMap</code> if the argument is
-     * <code>null</code>, or the argument itself otherwise.
+     * Returns an immutable empty {@code MultiValuedMap} if the argument is
+     * {@code null}, or the argument itself otherwise.
      *
      * @param <K> the type of key in the map
      * @param <V> the type of value in the map
@@ -83,7 +84,7 @@ public class MultiMapUtils {
     }
 
     /**
-     * Null-safe check if the specified <code>MultiValuedMap</code> is empty.
+     * Null-safe check if the specified {@code MultiValuedMap} is empty.
      * <p>
      * If the provided map is null, returns true.
      *
@@ -98,7 +99,7 @@ public class MultiMapUtils {
     // -------------------------------------------------------------------------
 
     /**
-     * Gets a Collection from <code>MultiValuedMap</code> in a null-safe manner.
+     * Gets a Collection from {@code MultiValuedMap} in a null-safe manner.
      *
      * @param <K> the key type
      * @param <V> the value type
@@ -117,7 +118,7 @@ public class MultiMapUtils {
     // to the returned collection might update the backing map. This should be clarified and/or prevented.
 
     /**
-     * Gets a List from <code>MultiValuedMap</code> in a null-safe manner.
+     * Gets a List from {@code MultiValuedMap} in a null-safe manner.
      *
      * @param <K> the key type
      * @param <V> the value type
@@ -137,7 +138,7 @@ public class MultiMapUtils {
     }
 
     /**
-     * Gets a Set from <code>MultiValuedMap</code> in a null-safe manner.
+     * Gets a Set from {@code MultiValuedMap} in a null-safe manner.
      *
      * @param <K> the key type
      * @param <V> the value type
@@ -157,7 +158,7 @@ public class MultiMapUtils {
     }
 
     /**
-     * Gets a Bag from <code>MultiValuedMap</code> in a null-safe manner.
+     * Gets a Bag from {@code MultiValuedMap} in a null-safe manner.
      *
      * @param <K> the key type
      * @param <V> the value type
@@ -185,7 +186,7 @@ public class MultiMapUtils {
      *
      * @param <K> the key type
      * @param <V> the value type
-     * @return a new <code>ListValuedMap</code>
+     * @return a new {@code ListValuedMap}
      */
     public static <K, V> ListValuedMap<K, V> newListValuedHashMap() {
         return new ArrayListValuedHashMap<>();
@@ -207,7 +208,7 @@ public class MultiMapUtils {
     // -----------------------------------------------------------------------
 
     /**
-     * Returns an <code>UnmodifiableMultiValuedMap</code> backed by the given
+     * Returns an {@code UnmodifiableMultiValuedMap} backed by the given
      * map.
      *
      * @param <K> the key type
@@ -222,12 +223,12 @@ public class MultiMapUtils {
     }
 
     /**
-     * Returns a <code>TransformedMultiValuedMap</code> backed by the given map.
+     * Returns a {@code TransformedMultiValuedMap} backed by the given map.
      * <p>
-     * This method returns a new <code>MultiValuedMap</code> (decorating the
+     * This method returns a new {@code MultiValuedMap} (decorating the
      * specified map) that will transform any new entries added to it. Existing
      * entries in the specified map will not be transformed. If you want that
-     * behaviour, see {@link TransformedMultiValuedMap#transformedMap}.
+     * behavior, see {@link TransformedMultiValuedMap#transformedMap}.
      * <p>
      * Each object is passed through the transformers as it is added to the Map.
      * It is important not to use the original map after invoking this method,
@@ -241,7 +242,7 @@ public class MultiMapUtils {
      * @param map  the {@link MultiValuedMap} to transform, must not be null, typically empty
      * @param keyTransformer  the transformer for the map keys, null means no transformation
      * @param valueTransformer  the transformer for the map values, null means no transformation
-     * @return a transformed <code>MultiValuedMap</code> backed by the given map
+     * @return a transformed {@code MultiValuedMap} backed by the given map
      * @throws NullPointerException if map is null
      */
     public static <K, V> MultiValuedMap<K, V> transformedMultiValuedMap(final MultiValuedMap<K, V> map,

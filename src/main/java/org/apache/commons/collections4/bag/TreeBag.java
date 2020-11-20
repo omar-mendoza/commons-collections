@@ -22,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -32,11 +33,13 @@ import org.apache.commons.collections4.SortedBag;
  * This is the standard implementation of a sorted bag.
  * <p>
  * Order will be maintained among the bag members and can be viewed through the iterator.
+ * </p>
  * <p>
  * A {@link org.apache.commons.collections4.Bag Bag} stores each object in the collection
  * together with a count of occurrences. Extra methods on the interface allow multiple
  * copies of an object to be added or removed at once. It is important to read the interface
  * javadoc carefully as several methods violate the {@link Collection} interface specification.
+ * </p>
  *
  * @param <E> the type of elements in this bag
  * @since 3.0 (previously in main package v2.0)
@@ -85,10 +88,8 @@ public class TreeBag<E> extends AbstractMapBag<E> implements SortedBag<E>, Seria
      */
     @Override
     public boolean add(final E object) {
-        if(comparator() == null && !(object instanceof Comparable)) {
-            if (object == null) {
-                throw new NullPointerException();
-            }
+        if (comparator() == null && !(object instanceof Comparable)) {
+            Objects.requireNonNull(object, "object");
             throw new IllegalArgumentException("Objects of type " + object.getClass() + " cannot be added to " +
                                                "a naturally ordered TreeBag as it does not implement Comparable");
         }

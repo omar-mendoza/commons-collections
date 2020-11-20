@@ -22,6 +22,8 @@ import java.util.Map;
  * Abstract Pair class to assist with creating correct
  * {@link java.util.Map.Entry Map.Entry} implementations.
  *
+ * @param <K> the type of keys
+ * @param <V> the type of mapped values
  * @since 3.0
  */
 public abstract class AbstractMapEntry<K, V> extends AbstractKeyValue<K, V> implements Map.Entry<K, V> {
@@ -39,9 +41,9 @@ public abstract class AbstractMapEntry<K, V> extends AbstractKeyValue<K, V> impl
     // Map.Entry interface
     //-------------------------------------------------------------------------
     /**
-     * Sets the value stored in this <code>Map.Entry</code>.
+     * Sets the value stored in this {@code Map.Entry}.
      * <p>
-     * This <code>Map.Entry</code> is not connected to a Map, so only the
+     * This {@code Map.Entry} is not connected to a Map, so only the
      * local data is changed.
      *
      * @param value  the new value
@@ -53,7 +55,7 @@ public abstract class AbstractMapEntry<K, V> extends AbstractKeyValue<K, V> impl
     }
 
     /**
-     * Compares this <code>Map.Entry</code> with another <code>Map.Entry</code>.
+     * Compares this {@code Map.Entry} with another {@code Map.Entry}.
      * <p>
      * Implemented per API documentation of {@link java.util.Map.Entry#equals(Object)}
      *

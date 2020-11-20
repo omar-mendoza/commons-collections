@@ -25,6 +25,7 @@ import org.apache.commons.collections4.Closure;
  * in order to prevent potential remote code execution exploits. Please refer to
  * <a href="https://issues.apache.org/jira/browse/COLLECTIONS-580">COLLECTIONS-580</a>
  * for more details.
+ * </p>
  *
  * @since 3.0
  */
@@ -38,13 +39,13 @@ public class ForClosure<E> implements Closure<E> {
     /**
      * Factory method that performs validation.
      * <p>
-     * A null closure or zero count returns the <code>NOPClosure</code>.
+     * A null closure or zero count returns the {@code NOPClosure}.
      * A count of one returns the specified closure.
      *
      * @param <E> the type that the closure acts on
      * @param count  the number of times to execute the closure
      * @param closure  the closure to execute, not null
-     * @return the <code>for</code> closure
+     * @return the {@code for} closure
      */
     @SuppressWarnings("unchecked")
     public static <E> Closure<E> forClosure(final int count, final Closure<? super E> closure) {
@@ -59,7 +60,7 @@ public class ForClosure<E> implements Closure<E> {
 
     /**
      * Constructor that performs no validation.
-     * Use <code>forClosure</code> if you want that.
+     * Use {@code forClosure} if you want that.
      *
      * @param count  the number of times to execute the closure
      * @param closure  the closure to execute, not null
@@ -71,7 +72,7 @@ public class ForClosure<E> implements Closure<E> {
     }
 
     /**
-     * Executes the closure <code>count</code> times.
+     * Executes the closure {@code count} times.
      *
      * @param input  the input object
      */

@@ -129,21 +129,21 @@ public class CollectionSortedBagTest<T> extends AbstractCollectionTest<T> {
 
     /**
      * Compare the current serialized form of the Bag
-     * against the canonical version in SVN.
+     * against the canonical version in SCM.
      */
     public void testEmptyBagCompatibility() throws IOException, ClassNotFoundException {
         // test to make sure the canonical form has been preserved
         final Bag<T> bag = makeObject();
         if (bag instanceof Serializable && !skipSerializedCanonicalTests() && isTestSerialization()) {
             final Bag<?> bag2 = (Bag<?>) readExternalFormFromDisk(getCanonicalEmptyCollectionName(bag));
-            assertTrue("Bag is empty",bag2.size()  == 0);
+            assertEquals("Bag is empty", 0, bag2.size());
             assertEquals(bag, bag2);
         }
     }
 
     /**
      * Compare the current serialized form of the Bag
-     * against the canonical version in SVN.
+     * against the canonical version in SCM.
      */
     public void testFullBagCompatibility() throws IOException, ClassNotFoundException {
         // test to make sure the canonical form has been preserved

@@ -29,20 +29,23 @@ import java.util.List;
  * 1) any single Comparator returns a non-zero result (and that result is then
  * returned), or 2) the ComparatorChain is exhausted (and zero is returned).
  * This type of sorting is very similar to multi-column sorting in SQL, and this
- * class allows Java classes to emulate that kind of behaviour when sorting a
+ * class allows Java classes to emulate that kind of behavior when sorting a
  * List.
  * <p>
  * To further facilitate SQL-like sorting, the order of any single Comparator in
  * the list can be reversed.
+ * </p>
  * <p>
  * Calling a method that adds new Comparators or changes the ascend/descend sort
  * <i>after compare(Object, Object) has been called</i> will result in an
  * UnsupportedOperationException. However, <i>take care</i> to not alter the
  * underlying List of Comparators or the BitSet that defines the sort order.
+ * </p>
  * <p>
  * Instances of ComparatorChain are not synchronized. The class is not
  * thread-safe at construction time, but it <i>is</i> thread-safe to perform
  * multiple comparisons after all the setup operations are complete.
+ * </p>
  *
  * @param <E> the type of objects compared by this comparator
  * @since 2.0
@@ -179,7 +182,7 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
     public void setComparator(final int index, final Comparator<E> comparator, final boolean reverse) {
         checkLocked();
 
-        comparatorChain.set(index,comparator);
+        comparatorChain.set(index, comparator);
         if (reverse == true) {
             orderingBits.set(index);
         } else {
@@ -275,7 +278,7 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
         for (int comparatorIndex = 0; comparators.hasNext(); ++comparatorIndex) {
 
             final Comparator<? super E> comparator = comparators.next();
-            int retval = comparator.compare(o1,o2);
+            int retval = comparator.compare(o1, o2);
             if (retval != 0) {
                 // invert the order if it is a reverse sort
                 if (orderingBits.get(comparatorIndex) == true) {
@@ -314,13 +317,13 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
     }
 
     /**
-     * Returns <code>true</code> iff <i>that</i> Object is
+     * Returns {@code true} iff <i>that</i> Object is
      * is a {@link Comparator} whose ordering is known to be
      * equivalent to mine.
      * <p>
-     * This implementation returns <code>true</code>
-     * iff <code><i>object</i>.{@link Object#getClass() getClass()}</code>
-     * equals <code>this.getClass()</code>, and the underlying
+     * This implementation returns {@code true}
+     * iff {@code <i>object</i>.{@link Object#getClass() getClass()}}
+     * equals {@code this.getClass()}, and the underlying
      * comparators and order bits are equal.
      * Subclasses may want to override this behavior to remain consistent
      * with the {@link Comparator#equals(Object)} contract.

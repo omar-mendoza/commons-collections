@@ -17,6 +17,7 @@
 package org.apache.commons.collections4.iterators;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.apache.commons.collections4.Unmodifiable;
 
@@ -24,7 +25,9 @@ import org.apache.commons.collections4.Unmodifiable;
  * Decorates an iterator such that it cannot be modified.
  * <p>
  * Attempts to modify it will result in an UnsupportedOperationException.
+ * </p>
  *
+ * @param <E> the type of elements returned by this iterator.
  * @since 3.0
  */
 public final class UnmodifiableIterator<E> implements Iterator<E>, Unmodifiable {
@@ -44,9 +47,7 @@ public final class UnmodifiableIterator<E> implements Iterator<E>, Unmodifiable 
      * @throws NullPointerException if the iterator is null
      */
     public static <E> Iterator<E> unmodifiableIterator(final Iterator<? extends E> iterator) {
-        if (iterator == null) {
-            throw new NullPointerException("Iterator must not be null");
-        }
+        Objects.requireNonNull(iterator, "iterator");
         if (iterator instanceof Unmodifiable) {
             @SuppressWarnings("unchecked") // safe to upcast
             final Iterator<E> tmpIterator = (Iterator<E>) iterator;

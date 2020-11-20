@@ -22,8 +22,9 @@ import java.util.Iterator;
  * Defines an iterator that can be reset back to an initial state.
  * <p>
  * This interface allows an iterator to be repeatedly reused.
+ * </p>
  *
- * @param <E> the type to iterate over
+ * @param <E> the type of elements returned by this iterator.
  * @since 3.0
  */
 public interface ResettableIterator<E> extends Iterator<E> {

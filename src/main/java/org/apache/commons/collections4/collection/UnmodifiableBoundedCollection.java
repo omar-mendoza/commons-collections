@@ -18,6 +18,8 @@ package org.apache.commons.collections4.collection;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.BoundedCollection;
 import org.apache.commons.collections4.Unmodifiable;
@@ -32,10 +34,13 @@ import org.apache.commons.collections4.iterators.UnmodifiableIterator;
  * longer accessible.
  * The factory on this class will attempt to retrieve the bounded nature by
  * examining the package scope variables.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 3.1.
+ * </p>
  * <p>
  * Attempts to modify it will result in an UnsupportedOperationException.
+ * </p>
  *
  * @param <E> the type of elements in this collection
  * @since 3.0
@@ -50,7 +55,7 @@ public final class UnmodifiableBoundedCollection<E> extends AbstractCollectionDe
      * Factory method to create an unmodifiable bounded collection.
      *
      * @param <E> the type of the elements in the collection
-     * @param coll  the <code>BoundedCollection</code> to decorate, must not be null
+     * @param coll  the {@code BoundedCollection} to decorate, must not be null
      * @return a new unmodifiable bounded collection
      * @throws NullPointerException if {@code coll} is {@code null}
      * @since 4.0
@@ -71,34 +76,32 @@ public final class UnmodifiableBoundedCollection<E> extends AbstractCollectionDe
      * to find a suitable BoundedCollection.
      *
      * @param <E> the type of the elements in the collection
-     * @param coll  the <code>BoundedCollection</code> to decorate, must not be null
+     * @param collection  the {@code BoundedCollection} to decorate, must not be null
      * @return a new unmodifiable bounded collection
      * @throws NullPointerException if coll is null
      * @throws IllegalArgumentException if coll is not a {@code BoundedCollection}
      * @since 4.0
      */
     @SuppressWarnings("unchecked")
-    public static <E> BoundedCollection<E> unmodifiableBoundedCollection(Collection<? extends E> coll) {
-        if (coll == null) {
-            throw new NullPointerException("Collection must not be null.");
-        }
+    public static <E> BoundedCollection<E> unmodifiableBoundedCollection(Collection<? extends E> collection) {
+        Objects.requireNonNull(collection, "collection");
 
         // handle decorators
         for (int i = 0; i < 1000; i++) {  // counter to prevent infinite looping
-            if (coll instanceof BoundedCollection) {
+            if (collection instanceof BoundedCollection) {
                 break;  // normal loop exit
             }
-            if (coll instanceof AbstractCollectionDecorator) {
-                coll = ((AbstractCollectionDecorator<E>) coll).decorated();
-            } else if (coll instanceof SynchronizedCollection) {
-                coll = ((SynchronizedCollection<E>) coll).decorated();
+            if (collection instanceof AbstractCollectionDecorator) {
+                collection = ((AbstractCollectionDecorator<E>) collection).decorated();
+            } else if (collection instanceof SynchronizedCollection) {
+                collection = ((SynchronizedCollection<E>) collection).decorated();
             }
         }
 
-        if (coll instanceof BoundedCollection == false) {
+        if (collection instanceof BoundedCollection == false) {
             throw new IllegalArgumentException("Collection is not a bounded collection.");
         }
-        return new UnmodifiableBoundedCollection<>((BoundedCollection<E>) coll);
+        return new UnmodifiableBoundedCollection<>((BoundedCollection<E>) collection);
     }
 
     /**
@@ -135,6 +138,14 @@ public final class UnmodifiableBoundedCollection<E> extends AbstractCollectionDe
 
     @Override
     public boolean remove(final Object object) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since 4.4
+     */
+    @Override
+    public boolean removeIf(final Predicate<? super E> filter) {
         throw new UnsupportedOperationException();
     }
 

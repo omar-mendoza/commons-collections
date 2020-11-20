@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A Comparator which imposes a specific order on a specific set of Objects.
@@ -34,14 +35,17 @@ import java.util.Map;
  * Arrays.sort(planets, distanceFromSun);    // Back to original order
  * </pre>
  * <p>
- * Once <code>compare</code> has been called, the FixedOrderComparator is locked
+ * Once {@code compare} has been called, the FixedOrderComparator is locked
  * and attempts to modify it yield an UnsupportedOperationException.
+ * </p>
  * <p>
  * Instances of FixedOrderComparator are not synchronized.  The class is not
  * thread-safe at construction time, but it is thread-safe to perform
  * multiple comparisons  after all the setup operations are complete.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 4.0.
+ * </p>
  *
  * @param <T> the type of objects compared by this comparator
  * @since 3.0
@@ -55,7 +59,7 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
      * Unknown object behavior enum.
      * @since 4.0
      */
-    public static enum UnknownObjectBehavior {
+    public enum UnknownObjectBehavior {
         BEFORE, AFTER, EXCEPTION;
     }
 
@@ -68,7 +72,7 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
     /** Is the comparator locked against further change */
     private boolean isLocked = false;
 
-    /** The behaviour in the case of an unknown object */
+    /** The behavior in the case of an unknown object */
     private UnknownObjectBehavior unknownObjectBehavior = UnknownObjectBehavior.EXCEPTION;
 
     // Constructors
@@ -91,10 +95,7 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
      */
     public FixedOrderComparator(final T... items) {
         super();
-        if (items == null) {
-            throw new NullPointerException("The list of items must not be null");
-        }
-        for (final T item : items) {
+        for (final T item : Objects.requireNonNull(items, "items")) {
             add(item);
         }
     }
@@ -110,10 +111,7 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
      */
     public FixedOrderComparator(final List<T> items) {
         super();
-        if (items == null) {
-            throw new NullPointerException("The list of items must not be null");
-        }
-        for (final T t : items) {
+        for (final T t : Objects.requireNonNull(items, "items")) {
             add(t);
         }
     }
@@ -154,17 +152,14 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
     /**
      * Sets the behavior for comparing unknown objects.
      *
-     * @param unknownObjectBehavior  the flag for unknown behaviour -
+     * @param unknownObjectBehavior  the flag for unknown behavior -
      * UNKNOWN_AFTER, UNKNOWN_BEFORE or UNKNOWN_THROW_EXCEPTION
      * @throws UnsupportedOperationException if a comparison has been performed
      * @throws NullPointerException if unknownObjectBehavior is null
      */
     public void setUnknownObjectBehavior(final UnknownObjectBehavior unknownObjectBehavior) {
         checkLocked();
-        if (unknownObjectBehavior == null) {
-            throw new NullPointerException("Unknown object behavior must not be null");
-        }
-        this.unknownObjectBehavior = unknownObjectBehavior;
+        this.unknownObjectBehavior = Objects.requireNonNull(unknownObjectBehavior, "unknownObjectBehavior");
     }
 
     // Methods for adding items
@@ -257,7 +252,7 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
     @Override
     public int hashCode() {
         int total = 17;
-        total = total*37 + (map == null ? 0 : map.hashCode());
+        total = total*37 + map.hashCode();
         total = total*37 + (unknownObjectBehavior == null ? 0 : unknownObjectBehavior.hashCode());
         total = total*37 + counter;
         total = total*37 + (isLocked ? 0 : 1);
@@ -265,12 +260,12 @@ public class FixedOrderComparator<T> implements Comparator<T>, Serializable {
     }
 
     /**
-     * Returns <code>true</code> iff <i>that</i> Object is
+     * Returns {@code true} iff <i>that</i> Object is
      * is a {@link Comparator} whose ordering is known to be
      * equivalent to mine.
      * <p>
-     * This implementation returns <code>true</code>
-     * iff <code><i>that</i></code> is a {@link FixedOrderComparator}
+     * This implementation returns {@code true}
+     * iff {@code <i>that</i>} is a {@link FixedOrderComparator}
      * whose attributes are equal to mine.
      *
      * @param object  the object to compare to

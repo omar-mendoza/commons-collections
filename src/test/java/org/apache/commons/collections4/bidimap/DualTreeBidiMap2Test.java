@@ -52,8 +52,8 @@ public class DualTreeBidiMap2Test<K extends Comparable<K>, V extends Comparable<
     @Override
     public DualTreeBidiMap<K, V> makeObject() {
         return new DualTreeBidiMap<>(
-                new ReverseComparator<>(ComparableComparator.<K> comparableComparator()),
-                new ReverseComparator<>(ComparableComparator.<V> comparableComparator()));
+                new ReverseComparator<>(ComparableComparator.<K>comparableComparator()),
+                new ReverseComparator<>(ComparableComparator.<V>comparableComparator()));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class DualTreeBidiMap2Test<K extends Comparable<K>, V extends Comparable<
             final Object dest = in.readObject();
             in.close();
 
-            final SortedBidiMap<?,?> bidi = (SortedBidiMap<?,?>) dest;
+            final SortedBidiMap<?, ?> bidi = (SortedBidiMap<?, ?>) dest;
             assertNotNull(obj.comparator());
             assertNotNull(bidi.comparator());
             assertTrue(bidi.comparator() instanceof ReverseComparator);
@@ -115,13 +115,13 @@ public class DualTreeBidiMap2Test<K extends Comparable<K>, V extends Comparable<
 
         final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray()));
         @SuppressWarnings("unchecked")
-        final DualTreeBidiMap<String, Integer> deserialised = (DualTreeBidiMap<String, Integer>) in.readObject();
+        final DualTreeBidiMap<String, Integer> deserialized = (DualTreeBidiMap<String, Integer>) in.readObject();
         in.close();
 
         assertNotNull(original.comparator());
-        assertNotNull(deserialised.comparator());
-        assertEquals(original.comparator().getClass(), deserialised.comparator().getClass());
-        assertEquals(original.valueComparator().getClass(), deserialised.valueComparator().getClass());
+        assertNotNull(deserialized.comparator());
+        assertEquals(original.comparator().getClass(), deserialized.comparator().getClass());
+        assertEquals(original.valueComparator().getClass(), deserialized.valueComparator().getClass());
     }
 
     public void testSortOrder() throws Exception {
@@ -154,24 +154,6 @@ public class DualTreeBidiMap2Test<K extends Comparable<K>, V extends Comparable<
     @Override
     public String[] ignoredTests() {
         final String recursiveTest = "DualTreeBidiMap2Test.bulkTestInverseMap.bulkTestInverseMap";
-
-        if (IBMJDK16) {
-            final String preSub = "DualTreeBidiMap2Test.bulkTestSubMap.";
-            final String preTail = "DualTreeBidiMap2Test.bulkTestTailMap.";
-            return new String[] {
-                    recursiveTest,
-                    preSub + "bulkTestMapEntrySet.testCollectionIteratorRemove",
-                    preSub + "bulkTestMapValues.testCollectionIteratorRemove",
-                    preTail + "testMapRemove",
-                    preTail + "bulkTestMapEntrySet.testCollectionIteratorRemove",
-                    preTail + "bulkTestMapEntrySet.testCollectionRemoveAll",
-                    preTail + "bulkTestMapKeySet.testCollectionIteratorRemove",
-                    preTail + "bulkTestMapKeySet.testCollectionRemoveAll",
-                    preTail + "bulkTestMapValues.testCollectionClear",
-                    preTail + "bulkTestMapValues.testCollectionRemoveAll",
-                    preTail + "bulkTestMapValues.testCollectionRetainAll"
-            };
-        }
         return new String[] { recursiveTest };
     }
 

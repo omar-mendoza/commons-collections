@@ -25,13 +25,14 @@ import java.util.Map;
 import org.apache.commons.collections4.BoundedMap;
 
 /**
- * A <code>Map</code> implementation with a fixed maximum size which removes
+ * A {@code Map} implementation with a fixed maximum size which removes
  * the least recently used entry if an entry is added when full.
  * <p>
  * The least recently used algorithm works on the get and put operations only.
  * Iteration of any kind, including setting the value by iteration, does not
  * change the order. Queries such as containsKey and containsValue or access
  * via views also do not change the order.
+ * </p>
  * <p>
  * A somewhat subtle ramification of the least recently used
  * algorithm is that calls to {@link #get(Object)} stand a very good chance
@@ -39,20 +40,24 @@ import org.apache.commons.collections4.BoundedMap;
  * iterators currently in use.  It is therefore suggested that iterations
  * over an {@link LRUMap} instance access entry values only through a
  * {@link org.apache.commons.collections4.MapIterator MapIterator} or {@link #entrySet()} iterator.
+ * </p>
  * <p>
- * The map implements <code>OrderedMap</code> and entries may be queried using
- * the bidirectional <code>OrderedMapIterator</code>. The order returned is
+ * The map implements {@code OrderedMap} and entries may be queried using
+ * the bidirectional {@code OrderedMapIterator}. The order returned is
  * least recently used to most recently used. Iterators from map views can
- * also be cast to <code>OrderedIterator</code> if required.
+ * also be cast to {@code OrderedIterator} if required.
+ * </p>
  * <p>
  * All the available iterators can be reset back to the start by casting to
- * <code>ResettableIterator</code> and calling <code>reset()</code>.
+ * {@code ResettableIterator} and calling {@code reset()}.
+ * </p>
  * <p>
  * <strong>Note that LRUMap is not synchronized and is not thread-safe.</strong>
  * If you wish to use this map from multiple threads concurrently, you must use
  * appropriate synchronization. The simplest approach is to wrap this map
  * using {@link java.util.Collections#synchronizedMap(Map)}. This class may throw
- * <code>NullPointerException</code>'s when accessed by concurrent threads.
+ * {@code NullPointerException}'s when accessed by concurrent threads.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -68,7 +73,7 @@ public class LRUMap<K, V>
 
     /** Maximum size */
     private transient int maxSize;
-    /** Scan behaviour */
+    /** Scan behavior */
     private boolean scanUntilRemovable;
 
     /**
@@ -105,7 +110,7 @@ public class LRUMap<K, V>
      * Constructs a new, empty map with the specified maximum size.
      *
      * @param maxSize  the maximum size of the map
-     * @param scanUntilRemovable  scan until a removeable entry is found, default false
+     * @param scanUntilRemovable  scan until a removable entry is found, default false
      * @throws IllegalArgumentException if the maximum size is less than one
      * @since 3.1
      */
@@ -147,7 +152,7 @@ public class LRUMap<K, V>
      *
      * @param maxSize  the maximum size of the map
      * @param loadFactor  the load factor
-     * @param scanUntilRemovable  scan until a removeable entry is found, default false
+     * @param scanUntilRemovable  scan until a removable entry is found, default false
      * @throws IllegalArgumentException if the maximum size is less than one
      * @throws IllegalArgumentException if the load factor is less than zero
      * @since 3.1
@@ -162,7 +167,7 @@ public class LRUMap<K, V>
      * @param maxSize  the maximum size of the map
      * @param initialSize  the initial size of the map
      * @param loadFactor  the load factor
-     * @param scanUntilRemovable  scan until a removeable entry is found, default false
+     * @param scanUntilRemovable  scan until a removable entry is found, default false
      * @throws IllegalArgumentException if the maximum size is less than one
      * @throws IllegalArgumentException if the initial size is negative or larger than the maximum size
      * @throws IllegalArgumentException if the load factor is less than zero
@@ -178,7 +183,7 @@ public class LRUMap<K, V>
             throw new IllegalArgumentException("LRUMap max size must be greater than 0");
         }
         if (initialSize > maxSize) {
-            throw new IllegalArgumentException("LRUMap initial size must not be greather than max size");
+            throw new IllegalArgumentException("LRUMap initial size must not be greater than max size");
         }
         this.maxSize = maxSize;
         this.scanUntilRemovable = scanUntilRemovable;
@@ -203,7 +208,7 @@ public class LRUMap<K, V>
      * <p>The maximum size is set from the map's size.</p>
      *
      * @param map  the map to copy
-     * @param scanUntilRemovable  scan until a removeable entry is found, default false
+     * @param scanUntilRemovable  scan until a removable entry is found, default false
      * @throws NullPointerException if the map is null
      * @throws IllegalArgumentException if the map is empty
      * @since 3.1
@@ -264,10 +269,9 @@ public class LRUMap<K, V>
         if (entry.after != header) {
             modCount++;
             // remove
-            if(entry.before == null) {
+            if (entry.before == null) {
                 throw new IllegalStateException("Entry.before is null." +
-                    " Please check that your keys are immutable, and that you have used synchronization properly." +
-                    " If so, then please report this to dev@commons.apache.org as a bug.");
+                    " This should not occur if your keys are immutable, and you have used synchronization properly.");
             }
             entry.before.after = entry.after;
             entry.after.before = entry.before;
@@ -278,7 +282,7 @@ public class LRUMap<K, V>
             header.before = entry;
         } else if (entry == header) {
             throw new IllegalStateException("Can't move header to MRU" +
-                " (please report this to dev@commons.apache.org)");
+                    " This should not occur if your keys are immutable, and you have used synchronization properly.");
         }
     }
 
@@ -304,7 +308,7 @@ public class LRUMap<K, V>
      * discard an entry or not using {@link #removeLRU(AbstractLinkedMap.LinkEntry)}.
      * <p>
      * From Commons Collections 3.1 this method uses {@link #isFull()} rather
-     * than accessing <code>size</code> and <code>maxSize</code> directly.
+     * than accessing {@code size} and {@code maxSize} directly.
      * It also handles the scanUntilRemovable functionality.
      *
      * @param hashIndex  the index into the data array to store at
@@ -327,10 +331,9 @@ public class LRUMap<K, V>
                 }
                 if (reuse == null) {
                     throw new IllegalStateException(
-                        "Entry.after=null, header.after" + header.after + " header.before" + header.before +
+                        "Entry.after=null, header.after=" + header.after + " header.before=" + header.before +
                         " key=" + key + " value=" + value + " size=" + size + " maxSize=" + maxSize +
-                        " Please check that your keys are immutable, and that you have used synchronization properly." +
-                        " If so, then please report this to dev@commons.apache.org as a bug.");
+                        " This should not occur if your keys are immutable and you used synchronization properly.");
                 }
             } else {
                 removeLRUEntry = removeLRU(reuse);
@@ -339,10 +342,9 @@ public class LRUMap<K, V>
             if (removeLRUEntry) {
                 if (reuse == null) {
                     throw new IllegalStateException(
-                        "reuse=null, header.after=" + header.after + " header.before" + header.before +
+                        "reuse=null, header.after=" + header.after + " header.before=" + header.before +
                         " key=" + key + " value=" + value + " size=" + size + " maxSize=" + maxSize +
-                        " Please check that your keys are immutable, and that you have used synchronization properly." +
-                        " If so, then please report this to dev@commons.apache.org as a bug.");
+                        " This should not occur if your keys are immutable and you used synchronization properly.");
                 }
                 reuseMapping(reuse, hashIndex, hashCode, key, value);
             } else {
@@ -382,8 +384,7 @@ public class LRUMap<K, V>
                 throw new IllegalStateException(
                     "Entry.next=null, data[removeIndex]=" + data[removeIndex] + " previous=" + previous +
                     " key=" + key + " value=" + value + " size=" + size + " maxSize=" + maxSize +
-                    " Please check that your keys are immutable, and that you have used synchronization properly." +
-                    " If so, then please report this to dev@commons.apache.org as a bug.");
+                    " This should not occur if your keys are immutable, and you have used synchronization properly.");
             }
 
             // reuse the entry
@@ -395,8 +396,7 @@ public class LRUMap<K, V>
             throw new IllegalStateException(
                     "NPE, entry=" + entry + " entryIsHeader=" + (entry==header) +
                     " key=" + key + " value=" + value + " size=" + size + " maxSize=" + maxSize +
-                    " Please check that your keys are immutable, and that you have used synchronization properly." +
-                    " If so, then please report this to dev@commons.apache.org as a bug.");
+                    " This should not occur if your keys are immutable, and you have used synchronization properly.");
         }
     }
 
@@ -442,7 +442,7 @@ public class LRUMap<K, V>
     /**
      * Returns true if this map is full and no new mappings can be added.
      *
-     * @return <code>true</code> if the map is full
+     * @return {@code true} if the map is full
      */
     @Override
     public boolean isFull() {
@@ -505,7 +505,7 @@ public class LRUMap<K, V>
     }
 
     /**
-     * Writes the data necessary for <code>put()</code> to work in deserialization.
+     * Writes the data necessary for {@code put()} to work in deserialization.
      *
      * @param out  the output stream
      * @throws IOException if an error occurs while writing to the stream
@@ -517,7 +517,7 @@ public class LRUMap<K, V>
     }
 
     /**
-     * Reads the data necessary for <code>put()</code> to work in the superclass.
+     * Reads the data necessary for {@code put()} to work in the superclass.
      *
      * @param in  the input stream
      * @throws IOException if an error occurs while reading from the stream

@@ -16,13 +16,17 @@
  */
 package org.apache.commons.collections4.iterators;
 
+import java.util.Objects;
+
 import org.apache.commons.collections4.MapIterator;
 
 /**
- * Provides basic behaviour for decorating a map iterator with extra functionality.
+ * Provides basic behavior for decorating a map iterator with extra functionality.
  * <p>
  * All methods are forwarded to the decorated map iterator.
  *
+ * @param <K> the type of keys
+ * @param <V> the type of mapped values
  * @since 3.0
  */
 public class AbstractMapIteratorDecorator<K, V> implements MapIterator<K, V> {
@@ -39,10 +43,7 @@ public class AbstractMapIteratorDecorator<K, V> implements MapIterator<K, V> {
      */
     public AbstractMapIteratorDecorator(final MapIterator<K, V> iterator) {
         super();
-        if (iterator == null) {
-            throw new NullPointerException("MapIterator must not be null");
-        }
-        this.iterator = iterator;
+        this.iterator = Objects.requireNonNull(iterator, "iterator");
     }
 
     /**

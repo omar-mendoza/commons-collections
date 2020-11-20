@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.MapIterator;
@@ -33,6 +35,7 @@ import org.apache.commons.collections4.keyvalue.AbstractMapEntryDecorator;
  * <p>
  * An implementation can be written simply by implementing the
  * {@link #createBidiMap(Map, Map, BidiMap)} method.
+ * </p>
  *
  * @param <K> the type of the keys in the map
  * @param <V> the type of the values in the map
@@ -74,7 +77,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
     transient Set<Map.Entry<K, V>> entrySet = null;
 
     /**
-     * Creates an empty map, initialised by <code>createMap</code>.
+     * Creates an empty map, initialised by {@code createMap}.
      * <p>
      * This constructor remains in place for deserialization.
      * All other usage is deprecated in favour of
@@ -92,7 +95,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
      * <p>
      * Neither map is validated, so nulls may be passed in.
      * If you choose to do this then the subclass constructor must populate
-     * the <code>maps[]</code> instance variable itself.
+     * the {@code maps[]} instance variable itself.
      *
      * @param normalMap  the normal direction map
      * @param reverseMap  the reverse direction map
@@ -106,7 +109,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
 
     /**
      * Constructs a map that decorates the specified maps,
-     * used by the subclass <code>createBidiMap</code> implementation.
+     * used by the subclass {@code createBidiMap} implementation.
      *
      * @param normalMap  the normal direction map
      * @param reverseMap  the reverse direction map
@@ -126,7 +129,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
      * @param normalMap  the normal direction map
      * @param reverseMap  the reverse direction map
      * @param inverseMap  this map, which is the inverse in the new map
-     * @return the inverse map
+     * @return the bidi map
      */
     protected abstract BidiMap<V, K> createBidiMap(Map<V, K> normalMap, Map<K, V> reverseMap, BidiMap<K, V> inverseMap);
 
@@ -215,13 +218,10 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
     // BidiMap
     //-----------------------------------------------------------------------
     /**
-     * Obtains a <code>MapIterator</code> over the map.
-     * The iterator implements <code>ResetableMapIterator</code>.
+     * Obtains a {@code MapIterator} over the map.
+     * The iterator implements {@link BidiMapIterator}.
      * This implementation relies on the entrySet iterator.
      * <p>
-     * The setValue() methods only allow a new value to be set.
-     * If the value being set is already in the map, an IllegalArgumentException
-     * is thrown (as setValue cannot change the size of the map).
      *
      * @return a map iterator
      */
@@ -341,7 +341,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
     /**
      * Inner class View.
      */
-    protected static abstract class View<K, V, E> extends AbstractCollectionDecorator<E> {
+    protected abstract static class View<K, V, E> extends AbstractCollectionDecorator<E> {
 
         /** Generated serial version ID. */
         private static final long serialVersionUID = 4621510560119690639L;
@@ -350,7 +350,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
         protected final AbstractDualBidiMap<K, V> parent;
 
         /**
-         * Constructs a new view of the BidiMap.
+         * Constructor.
          *
          * @param coll  the collection view being decorated
          * @param parent  the parent BidiMap
@@ -370,6 +370,27 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
             return decorated().hashCode();
         }
 
+        /**
+         * @since 4.4
+         */
+        @Override
+        public boolean removeIf(final Predicate<? super E> filter) {
+            if (parent.isEmpty() || Objects.isNull(filter)) {
+                return false;
+            }
+            boolean modified = false;
+            final Iterator<?> it = iterator();
+            while (it.hasNext()) {
+                @SuppressWarnings("unchecked")
+                final E e = (E) it.next();
+                if (filter.test(e)) {
+                    it.remove();
+                    modified = true;
+                }
+            }
+            return modified;
+        }
+
         @Override
         public boolean removeAll(final Collection<?> coll) {
             if (parent.isEmpty() || coll.isEmpty()) {
@@ -387,9 +408,9 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
          * {@inheritDoc}
          * <p>
          * This implementation iterates over the elements of this bidi map, checking each element in
-         * turn to see if it's contained in <code>coll</code>. If it's not contained, it's removed
+         * turn to see if it's contained in {@code coll}. If it's not contained, it's removed
          * from this bidi map. As a consequence, it is advised to use a collection type for
-         * <code>coll</code> that provides a fast (e.g. O(1)) implementation of
+         * {@code coll} that provides a fast (e.g. O(1)) implementation of
          * {@link Collection#contains(Object)}.
          */
         @Override
@@ -428,7 +449,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
         private static final long serialVersionUID = -7107935777385040694L;
 
         /**
-         * Constructs a new view of the BidiMap.
+         * Constructor.
          *
          * @param parent  the parent BidiMap
          */
@@ -512,7 +533,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
         private static final long serialVersionUID = 4023777119829639864L;
 
         /**
-         * Constructs a new view of the BidiMap.
+         * Constructor.
          *
          * @param parent  the parent BidiMap
          */
@@ -596,7 +617,7 @@ public abstract class AbstractDualBidiMap<K, V> implements BidiMap<K, V> {
         private static final long serialVersionUID = 4040410962603292348L;
 
         /**
-         * Constructs a new view of the BidiMap.
+         * Constructor.
          *
          * @param parent  the parent BidiMap
          */

@@ -20,9 +20,10 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 
 /**
- * Decorates another <code>NavigableSet</code> to provide additional behaviour.
+ * Decorates another {@code NavigableSet} to provide additional behavior.
  * <p>
  * Methods are forwarded directly to the decorated set.
+ * </p>
  *
  * @param <E> the type of the elements in the navigable set
  * @since 4.1
@@ -104,7 +105,8 @@ public abstract class AbstractNavigableSetDecorator<E>
     }
 
     @Override
-    public NavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement, final boolean toInclusive) {
+    public NavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement,
+            final boolean toInclusive) {
         return decorated().subSet(fromElement, fromInclusive, toElement, toInclusive);
     }
 

@@ -53,13 +53,12 @@ public class ReverseComparator<E> implements Comparator<E>, Serializable {
 
     /**
      * Creates a comparator that inverts the comparison
-     * of the given comparator.  If you pass in <code>null</code>,
+     * of the given comparator.  If you pass in {@code null},
      * the ReverseComparator defaults to reversing the
      * natural order, as per {@link java.util.Collections#reverseOrder()}.
      *
      * @param comparator Comparator to reverse
      */
-    @SuppressWarnings("unchecked")
     public ReverseComparator(final Comparator<? super E> comparator) {
         this.comparator = comparator == null ? ComparatorUtils.NATURAL_COMPARATOR : comparator;
     }
@@ -91,13 +90,13 @@ public class ReverseComparator<E> implements Comparator<E>, Serializable {
     }
 
     /**
-     * Returns <code>true</code> iff <i>that</i> Object is
+     * Returns {@code true} iff <i>that</i> Object is
      * is a {@link Comparator} whose ordering is known to be
      * equivalent to mine.
      * <p>
-     * This implementation returns <code>true</code>
-     * iff <code><i>object</i>.{@link Object#getClass() getClass()}</code>
-     * equals <code>this.getClass()</code>, and the underlying
+     * This implementation returns {@code true}
+     * iff {@code <i>object</i>.{@link Object#getClass() getClass()}}
+     * equals {@code this.getClass()}, and the underlying
      * comparators are equal.
      * Subclasses may want to override this behavior to remain consistent
      * with the {@link Comparator#equals(Object) equals} contract.

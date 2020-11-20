@@ -18,6 +18,7 @@ package org.apache.commons.collections4.functors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import org.apache.commons.collections4.FunctorException;
 import org.apache.commons.collections4.Transformer;
@@ -29,6 +30,7 @@ import org.apache.commons.collections4.Transformer;
  * in order to prevent potential remote code execution exploits. Please refer to
  * <a href="https://issues.apache.org/jira/browse/COLLECTIONS-580">COLLECTIONS-580</a>
  * for more details.
+ * </p>
  *
  * @since 3.0
  */
@@ -52,10 +54,7 @@ public class InvokerTransformer<I, O> implements Transformer<I, O> {
      * @since 3.1
      */
     public static <I, O> Transformer<I, O> invokerTransformer(final String methodName) {
-        if (methodName == null) {
-            throw new NullPointerException("The method to invoke must not be null");
-        }
-        return new InvokerTransformer<>(methodName);
+        return new InvokerTransformer<>(Objects.requireNonNull(methodName, "methodName"));
     }
 
     /**
@@ -72,9 +71,7 @@ public class InvokerTransformer<I, O> implements Transformer<I, O> {
      */
     public static <I, O> Transformer<I, O> invokerTransformer(final String methodName, final Class<?>[] paramTypes,
                                                               final Object[] args) {
-        if (methodName == null) {
-            throw new NullPointerException("The method to invoke must not be null");
-        }
+        Objects.requireNonNull(methodName, "methodName");
         if (((paramTypes == null) && (args != null))
             || ((paramTypes != null) && (args == null))
             || ((paramTypes != null) && (args != null) && (paramTypes.length != args.length))) {
@@ -100,7 +97,7 @@ public class InvokerTransformer<I, O> implements Transformer<I, O> {
 
     /**
      * Constructor that performs no validation.
-     * Use <code>invokerTransformer</code> if you want that.
+     * Use {@code invokerTransformer} if you want that.
      * <p>
      * Note: from 4.0, the input parameters will be cloned
      *

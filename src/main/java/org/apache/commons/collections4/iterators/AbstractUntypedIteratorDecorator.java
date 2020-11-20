@@ -17,9 +17,10 @@
 package org.apache.commons.collections4.iterators;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
- * Provides basic behaviour for decorating an iterator with extra functionality
+ * Provides basic behavior for decorating an iterator with extra functionality
  * without committing the generic type of the Iterator implementation.
  * <p>
  * All methods are forwarded to the decorated iterator.
@@ -39,10 +40,7 @@ public abstract class AbstractUntypedIteratorDecorator<I, O> implements Iterator
      */
     protected AbstractUntypedIteratorDecorator(final Iterator<I> iterator) {
         super();
-        if (iterator == null) {
-            throw new NullPointerException("Iterator must not be null");
-        }
-        this.iterator = iterator;
+        this.iterator = Objects.requireNonNull(iterator, "iterator");
     }
 
     /**

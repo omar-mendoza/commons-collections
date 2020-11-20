@@ -30,8 +30,10 @@ import org.apache.commons.collections4.Bag;
  * By decorating an existing {@link Bag} instance with a {@link CollectionBag},
  * it can be safely passed on to methods that require Collection types that
  * are fully compliant with the Collection contract.
+ * </p>
  * <p>
  * The method javadoc highlights the differences compared to the original Bag interface.
+ * </p>
  *
  * @see Bag
  * @param <E> the type of elements in this bag
@@ -83,7 +85,7 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
      * @param in  the input stream
      * @throws IOException if an error occurs while reading from the stream
      * @throws ClassNotFoundException if an object read from the stream can not be loaded
-     * @throws ClassCastException if deserialised object has wrong type
+     * @throws ClassCastException if deserialized object has wrong type
      */
     @SuppressWarnings("unchecked") // will throw CCE, see Javadoc
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -97,19 +99,19 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
 
     /**
      * <i>(Change)</i>
-     * Returns <code>true</code> if the bag contains all elements in
+     * Returns {@code true} if the bag contains all elements in
      * the given collection, <b>not</b> respecting cardinality. That is,
-     * if the given collection <code>coll</code> contains at least one of
+     * if the given collection {@code coll} contains at least one of
      * every object contained in this object.
      *
      * @param coll  the collection to check against
-     * @return <code>true</code> if the Bag contains at least one of every object in the collection
+     * @return {@code true} if the Bag contains at least one of every object in the collection
      */
     @Override
     public boolean containsAll(final Collection<?> coll) {
         final Iterator<?> e = coll.iterator();
         while (e.hasNext()) {
-            if(!contains(e.next())) {
+            if (!contains(e.next())) {
                 return false;
             }
         }
@@ -121,10 +123,10 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
      * Adds one copy of the specified object to the Bag.
      * <p>
      * Since this method always increases the size of the bag, it
-     * will always return <code>true</code>.
+     * will always return {@code true}.
      *
      * @param object  the object to add
-     * @return <code>true</code>, always
+     * @return {@code true}, always
      */
     @Override
     public boolean add(final E object) {
@@ -150,7 +152,7 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
      * bag contains no occurrence anymore of the object after this operation.
      *
      * @param object  the object to remove
-     * @return <code>true</code> if this call changed the collection
+     * @return {@code true} if this call changed the collection
      */
     @Override
     public boolean remove(final Object object) {
@@ -164,7 +166,7 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
      * occurrences of every object contained in the given collection.
      *
      * @param coll  the collection to remove
-     * @return <code>true</code> if this call changed the collection
+     * @return {@code true} if this call changed the collection
      */
     @Override
     public boolean removeAll(final Collection<?> coll) {
@@ -186,18 +188,18 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
      * <i>(Change)</i>
      * Remove any members of the bag that are not in the given collection,
      * <i>not</i> respecting cardinality. That is, any object in the given
-     * collection <code>coll</code> will be retained in the bag with the same
+     * collection {@code coll} will be retained in the bag with the same
      * number of copies prior to this operation. All other objects will be
      * completely removed from this bag.
      * <p>
      * This implementation iterates over the elements of this bag, checking
-     * each element in turn to see if it's contained in <code>coll</code>.
+     * each element in turn to see if it's contained in {@code coll}.
      * If it's not contained, it's removed from this bag. As a consequence,
-     * it is advised to use a collection type for <code>coll</code> that provides
+     * it is advised to use a collection type for {@code coll} that provides
      * a fast (e.g. O(1)) implementation of {@link Collection#contains(Object)}.
      *
      * @param coll  the collection to retain
-     * @return <code>true</code> if this call changed the collection
+     * @return {@code true} if this call changed the collection
      */
     @Override
     public boolean retainAll(final Collection<?> coll) {
@@ -222,14 +224,14 @@ public final class CollectionBag<E> extends AbstractBagDecorator<E> {
 
     /**
      * <i>(Change)</i>
-     * Adds <code>count</code> copies of the specified object to the Bag.
+     * Adds {@code count} copies of the specified object to the Bag.
      * <p>
      * Since this method always increases the size of the bag, it
-     * will always return <code>true</code>.
+     * will always return {@code true}.
      *
      * @param object  the object to add
      * @param count  the number of copies to add
-     * @return <code>true</code>, always
+     * @return {@code true}, always
      */
     @Override
     public boolean add(final E object, final int count) {

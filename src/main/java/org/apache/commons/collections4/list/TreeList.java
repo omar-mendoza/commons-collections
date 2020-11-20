@@ -24,33 +24,39 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import org.apache.commons.collections4.OrderedIterator;
 
 /**
- * A <code>List</code> implementation that is optimised for fast insertions and
+ * A {@code List} implementation that is optimised for fast insertions and
  * removals at any index in the list.
  * <p>
  * This list implementation utilises a tree structure internally to ensure that
  * all insertions and removals are O(log n). This provides much faster performance
- * than both an <code>ArrayList</code> and a <code>LinkedList</code> where elements
+ * than both an {@code ArrayList} and a {@code LinkedList} where elements
  * are inserted and removed repeatedly from anywhere in the list.
+ * </p>
  * <p>
  * The following relative performance statistics are indicative of this class:
+ * </p>
  * <pre>
  *              get  add  insert  iterate  remove
  * TreeList       3    5       1       2       1
  * ArrayList      1    1      40       1      40
  * LinkedList  5800    1     350       2     325
  * </pre>
- * <code>ArrayList</code> is a good general purpose list implementation.
- * It is faster than <code>TreeList</code> for most operations except inserting
- * and removing in the middle of the list. <code>ArrayList</code> also uses less
- * memory as <code>TreeList</code> uses one object per entry.
  * <p>
- * <code>LinkedList</code> is rarely a good choice of implementation.
- * <code>TreeList</code> is almost always a good replacement for it, although it
+ * {@code ArrayList} is a good general purpose list implementation.
+ * It is faster than {@code TreeList} for most operations except inserting
+ * and removing in the middle of the list. {@code ArrayList} also uses less
+ * memory as {@code TreeList} uses one object per entry.
+ * </p>
+ * <p>
+ * {@code LinkedList} is rarely a good choice of implementation.
+ * {@code TreeList} is almost always a good replacement for it, although it
  * does use slightly more memory.
+ * </p>
  *
  * @since 3.1
  */
@@ -433,7 +439,7 @@ public class TreeList<E> extends AbstractList<E> {
                     return result;
                 }
             }
-            if (value == null ? value == object : value.equals(object)) {
+            if (Objects.equals(value, object)) {
                 return index;
             }
             if (getRightSubTree() != null) {
@@ -673,22 +679,22 @@ public class TreeList<E> extends AbstractList<E> {
          */
         private AVLNode<E> balance() {
             switch (heightRightMinusLeft()) {
-                case 1 :
-                case 0 :
-                case -1 :
-                    return this;
-                case -2 :
-                    if (left.heightRightMinusLeft() > 0) {
-                        setLeft(left.rotateLeft(), null);
-                    }
-                    return rotateRight();
-                case 2 :
-                    if (right.heightRightMinusLeft() < 0) {
-                        setRight(right.rotateRight(), null);
-                    }
-                    return rotateLeft();
-                default :
-                    throw new RuntimeException("tree inconsistent!");
+            case 1 :
+            case 0 :
+            case -1 :
+                return this;
+            case -2 :
+                if (left.heightRightMinusLeft() > 0) {
+                    setLeft(left.rotateLeft(), null);
+                }
+                return rotateRight();
+            case 2 :
+                if (right.heightRightMinusLeft() < 0) {
+                    setRight(right.rotateRight(), null);
+                }
+                return rotateLeft();
+            default :
+                throw new RuntimeException("tree inconsistent!");
             }
         }
 
@@ -705,12 +711,12 @@ public class TreeList<E> extends AbstractList<E> {
         /**
          * Sets the relative position.
          */
-        private int setOffset(final AVLNode<E> node, final int newOffest) {
+        private int setOffset(final AVLNode<E> node, final int newOffset) {
             if (node == null) {
                 return 0;
             }
             final int oldOffset = getOffset(node);
-            node.relativePosition = newOffest;
+            node.relativePosition = newOffset;
             return oldOffset;
         }
 

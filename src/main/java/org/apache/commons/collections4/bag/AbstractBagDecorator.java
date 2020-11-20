@@ -22,9 +22,10 @@ import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.collection.AbstractCollectionDecorator;
 
 /**
- * Decorates another <code>Bag</code> to provide additional behaviour.
+ * Decorates another {@code Bag} to provide additional behavior.
  * <p>
  * Methods are forwarded directly to the decorated bag.
+ * </p>
  *
  * @param <E> the type of elements in this bag
  * @since 3.0

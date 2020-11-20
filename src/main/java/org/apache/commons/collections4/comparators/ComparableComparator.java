@@ -26,14 +26,16 @@ import java.util.Comparator;
  * This Comparator is useful, for example, for enforcing the natural order in
  * custom implementations of {@link java.util.SortedSet SortedSet} and
  * {@link java.util.SortedMap SortedMap}.
+ * </p>
  * <p>
  * Note: In the 2.0 and 2.1 releases of Commons Collections, this class would
  * throw a {@link ClassCastException} if either of the arguments to
- * {@link #compare(Object, Object) compare} were <code>null</code>, not
+ * {@link #compare(Object, Object) compare} were {@code null}, not
  * {@link Comparable Comparable}, or for which
  * {@link Comparable#compareTo(Object) compareTo} gave inconsistent results.
  * This is no longer the case. See {@link #compare(Object, Object) compare} for
  * details.
+ * </p>
  *
  * @param <E> the type of objects compared by this comparator
  *
@@ -61,7 +63,6 @@ public class ComparableComparator<E extends Comparable<? super E>> implements Co
      * @return the singleton ComparableComparator
      * @since 4.0
      */
-    @SuppressWarnings("unchecked")
     public static <E extends Comparable<? super E>> ComparableComparator<E> comparableComparator() {
         return INSTANCE;
     }
@@ -85,10 +86,10 @@ public class ComparableComparator<E extends Comparable<? super E>> implements Co
      * @param obj1  the first object to compare
      * @param obj2  the second object to compare
      * @return negative if obj1 is less, positive if greater, zero if equal
-     * @throws NullPointerException if <i>obj1</i> is <code>null</code>,
-     *         or when <code>((Comparable)obj1).compareTo(obj2)</code> does
-     * @throws ClassCastException if <i>obj1</i> is not a <code>Comparable</code>,
-     *         or when <code>((Comparable)obj1).compareTo(obj2)</code> does
+     * @throws NullPointerException if <i>obj1</i> is {@code null},
+     *         or when {@code ((Comparable)obj1).compareTo(obj2)} does
+     * @throws ClassCastException if <i>obj1</i> is not a {@code Comparable},
+     *         or when {@code ((Comparable)obj1).compareTo(obj2)} does
      */
     @Override
     public int compare(final E obj1, final E obj2) {
@@ -113,8 +114,8 @@ public class ComparableComparator<E extends Comparable<? super E>> implements Co
      * whose ordering is known to be equivalent to mine.
      * <p>
      * This implementation returns {@code true} iff
-     * <code><i>object</i>.{@link Object#getClass() getClass()}</code> equals
-     * <code>this.getClass()</code>. Subclasses may want to override this behavior to remain
+     * {@code <i>object</i>.{@link Object#getClass() getClass()}} equals
+     * {@code this.getClass()}. Subclasses may want to override this behavior to remain
      * consistent with the {@link Comparator#equals(Object)} contract.
      *
      * @param object  the object to compare with

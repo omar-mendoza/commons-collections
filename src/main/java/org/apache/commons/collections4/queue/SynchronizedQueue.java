@@ -21,10 +21,11 @@ import java.util.Queue;
 import org.apache.commons.collections4.collection.SynchronizedCollection;
 
 /**
- * Decorates another {@link Queue} to synchronize its behaviour for a multi-threaded environment.
+ * Decorates another {@link Queue} to synchronize its behavior for a multi-threaded environment.
  * <p>
  * Methods are synchronized, then forwarded to the decorated queue. Iterators must be separately synchronized around the
  * loop.
+ * </p>
  *
  * @param <E> the type of the elements in the collection
  * @since 4.2
@@ -46,7 +47,7 @@ public class SynchronizedQueue<E> extends SynchronizedCollection<E> implements Q
      *             if queue is null
      */
     public static <E> SynchronizedQueue<E> synchronizedQueue(final Queue<E> queue) {
-        return new SynchronizedQueue<E>(queue);
+        return new SynchronizedQueue<>(queue);
     }
 
     // -----------------------------------------------------------------------

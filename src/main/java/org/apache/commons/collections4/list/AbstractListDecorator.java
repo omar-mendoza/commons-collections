@@ -23,9 +23,10 @@ import java.util.ListIterator;
 import org.apache.commons.collections4.collection.AbstractCollectionDecorator;
 
 /**
- * Decorates another {@link List} to provide additional behaviour.
+ * Decorates another {@link List} to provide additional behavior.
  * <p>
  * Methods are forwarded directly to the decorated list.
+ * </p>
  *
  * @param <E> the type of the elements in the list
  * @since 3.0

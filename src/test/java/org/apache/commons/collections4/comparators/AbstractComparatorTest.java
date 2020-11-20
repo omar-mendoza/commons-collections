@@ -97,7 +97,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
      * Sort the list.
      */
     protected void sortObjects(final List<T> list, final Comparator<? super T> comparator) {
-        Collections.sort(list, comparator);
+        list.sort(comparator);
     }
 
     //-----------------------------------------------------------------------
@@ -111,7 +111,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
 
         final List<T> list2 = new LinkedList<>();
 
-        assertTrue("Comparator cannot sort empty lists", list2.equals(list));
+        assertEquals("Comparator cannot sort empty lists", list2, list);
     }
 
     /**
@@ -127,8 +127,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
 
         final List<T> orderedList = getComparableObjectsOrdered();
 
-        assertTrue("Comparator did not reorder the List correctly",
-                   orderedList.equals(randomList));
+        assertEquals("Comparator did not reorder the List correctly", orderedList, randomList);
     }
 
     /**
@@ -140,7 +139,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
 
         final List<T> randomList = getComparableObjectsOrdered();
         randomizeObjects(randomList);
-        sortObjects(randomList,comparator);
+        sortObjects(randomList, comparator);
 
         final List<T> orderedList = getComparableObjectsOrdered();
 
@@ -151,9 +150,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
         }
         */
 
-        assertTrue("Comparator did not reorder the List correctly",
-                   orderedList.equals(randomList));
-
+        assertEquals("Comparator did not reorder the List correctly", orderedList, randomList);
     }
 
     /**
@@ -170,7 +167,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
         final StringBuilder retval = new StringBuilder();
         retval.append(TEST_DATA_PATH);
         String colName = object.getClass().getName();
-        colName = colName.substring(colName.lastIndexOf(".")+1,colName.length());
+        colName = colName.substring(colName.lastIndexOf(".") + 1, colName.length());
         retval.append(colName);
         retval.append(".version");
         retval.append(getCompatibilityVersion());
@@ -180,7 +177,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
 
     /**
      * Compare the current serialized form of the Comparator
-     * against the canonical version in SVN.
+     * against the canonical version in SCM.
      */
     @SuppressWarnings("unchecked")
     @Test
@@ -216,9 +213,7 @@ public abstract class AbstractComparatorTest<T> extends AbstractObjectTest {
 
             final List<T> orderedList = getComparableObjectsOrdered();
 
-            assertTrue("Comparator did not reorder the List correctly",
-                       orderedList.equals(randomList));
+            assertEquals("Comparator did not reorder the List correctly", orderedList, randomList);
         }
     }
-
 }

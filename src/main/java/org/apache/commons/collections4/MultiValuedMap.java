@@ -25,22 +25,24 @@ import java.util.Set;
  * Defines a map that holds a collection of values against each key.
  * <p>
  * A {@code MultiValuedMap} is a Map with slightly different semantics:
+ * </p>
  * <ul>
  *   <li>Putting a value into the map will add the value to a {@link Collection} at that key.</li>
  *   <li>Getting a value will return a {@link Collection}, holding all the values put to that key.</li>
  * </ul>
  * <p>
  * For example:
- * <pre>
- * MultiValuedMap&lt;K, String&gt; map = new MultiValuedHashMap&lt;K, String&gt;();
- * map.put(key, &quot;A&quot;);
- * map.put(key, &quot;B&quot;);
- * map.put(key, &quot;C&quot;);
- * Collection&lt;String&gt; coll = map.get(key);
- * </pre>
+ * </p>
+ * <pre>{@code
+ * MultiValuedMap<Integer, String> map = new ArrayListValuedHashMap<>();
+ * map.put(1, "A");
+ * map.put(1, "B");
+ * map.put(1, "C");
+ * Collection<String> coll = map.get(1);
+ * }</pre>
  * <p>
- * <code>coll</code> will be a collection containing "A", "B", "C".
- * <p>
+ * {@code coll} will be a collection containing "A", "B", "C".
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -217,7 +219,7 @@ public interface MultiValuedMap<K, V> {
      * Other values attached to that key are unaffected.
      * <p>
      * If the last value for a key is removed, implementations typically return
-     * an empty collection from a subsequent <code>get(Object)</code>.
+     * an empty collection from a subsequent {@code get(Object)}.
      *
      * @param key  the key to remove from
      * @param item  the item to remove
@@ -309,7 +311,7 @@ public interface MultiValuedMap<K, V> {
     // Iterators
 
     /**
-     * Obtains a <code>MapIterator</code> over this multi-valued map.
+     * Obtains a {@code MapIterator} over this multi-valued map.
      * <p>
      * A map iterator is an efficient way of iterating over maps. There is no
      * need to access the entries collection or use {@code Map.Entry} objects.

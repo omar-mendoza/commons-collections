@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.AbstractObjectTest;
 
@@ -48,7 +50,7 @@ import org.apache.commons.collections4.AbstractObjectTest;
  * <b>Element Population Methods</b>
  * <p>
  * Override these if your collection restricts what kind of elements are
- * allowed (for instance, if <code>null</code> is not permitted):
+ * allowed (for instance, if {@code null} is not permitted):
  * <ul>
  * <li>{@link #getFullElements()}
  * <li>{@link #getOtherElements()}
@@ -71,12 +73,12 @@ import org.apache.commons.collections4.AbstractObjectTest;
  * for the collection.  Basically, the operation is performed against your
  * collection implementation, and an identical operation is performed against a
  * <i>confirmed</i> collection implementation.  A confirmed collection
- * implementation is something like <code>java.util.ArrayList</code>, which is
+ * implementation is something like {@code java.util.ArrayList}, which is
  * known to conform exactly to its collection interface's contract.  After the
  * operation takes place on both your collection implementation and the
  * confirmed collection implementation, the two collections are compared to see
  * if their state is identical.  The comparison is usually much more involved
- * than a simple <code>equals</code> test.  This verification is used to ensure
+ * than a simple {@code equals} test.  This verification is used to ensure
  * proper modifications are made along with ensuring that the collection does
  * not change when read-only modifications are made.
  * <p>
@@ -187,7 +189,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
     /**
      *  Returns true if the collections produced by
      *  {@link #makeObject()} and {@link #makeFullCollection()}
-     *  support the <code>add</code> and <code>addAll</code>
+     *  support the {@code add} and {@code addAll}
      *  operations.<P>
      *  Default implementation returns true.  Override if your collection
      *  class does not support add or addAll.
@@ -199,9 +201,9 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
     /**
      *  Returns true if the collections produced by
      *  {@link #makeObject()} and {@link #makeFullCollection()}
-     *  support the <code>remove</code>, <code>removeAll</code>,
-     *  <code>retainAll</code>, <code>clear</code> and
-     *  <code>iterator().remove()</code> methods.
+     *  support the {@code remove}, {@code removeAll},
+     *  {@code retainAll}, {@code clear} and
+     *  {@code iterator().remove()} methods.
      *  Default implementation returns true.  Override if your collection
      *  class does not support removal operations.
      */
@@ -281,7 +283,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
                     // skip values already matched
                     continue;
                 }
-                if (o == confirmedValues[i] || o != null && o.equals(confirmedValues[i])) {
+                if (Objects.equals(o, confirmedValues[i])) {
                     // values matched
                     matched[i] = true;
                     match = true;
@@ -357,7 +359,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
      *  Returns a full collection to be used for testing.  The collection
      *  returned by this method should contain every element returned by
      *  {@link #getFullElements()}.  The default implementation, in fact,
-     *  simply invokes <code>addAll</code> on an empty collection with
+     *  simply invokes {@code addAll} on an empty collection with
      *  the results of {@link #getFullElements()}.  Override this default
      *  if your collection doesn't support addAll.
      */
@@ -435,12 +437,12 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
             "Eight",
             new String("Nine"),
             Integer.valueOf(10),
-            new Short((short)11),
+            new Short((short) 11),
             new Long(12),
             "Thirteen",
             "14",
             "15",
-            new Byte((byte)16)
+            new Byte((byte) 16)
         };
     }
 
@@ -456,8 +458,8 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
             new Float(0),
             new Double(0),
             "Zero",
-            new Short((short)0),
-            new Byte((byte)0),
+            new Short((short) 0),
+            new Byte((byte) 0),
             new Long(0),
             new Character('\u0000'),
             "0"
@@ -473,7 +475,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
     public Object[] getFullNonNullStringElements() {
         return new Object[] {
             "If", "the", "dull", "substance", "of", "my", "flesh", "were",
-                "thought", "Injurious", "distance", "could", "not", "stop", "my", "way",
+            "thought", "Injurious", "distance", "could", "not", "stop", "my", "way",
         };
     }
 
@@ -485,8 +487,8 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
      */
     public Object[] getOtherNonNullStringElements() {
         return new Object[] {
-            "For", "then", "despite",/* of */"space", "I", "would", "be",
-                "brought", "From", "limits", "far", "remote", "where", "thou", "dost", "stay"
+            "For", "then", "despite", /* of */"space", "I", "would", "be",
+            "brought", "From", "limits", "far", "remote", "where", "thou", "dost", "stay"
         };
     }
 
@@ -646,16 +648,14 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         resetEmpty();
         elements = getFullElements();
         for (int i = 0; i < elements.length; i++) {
-            assertTrue("Empty collection shouldn't contain element[" + i + "]",
-                    !getCollection().contains(elements[i]));
+            assertFalse("Empty collection shouldn't contain element[" + i + "]", getCollection().contains(elements[i]));
         }
         // make sure calls to "contains" don't change anything
         verify();
 
         elements = getOtherElements();
         for (int i = 0; i < elements.length; i++) {
-            assertTrue("Empty collection shouldn't contain element[" + i + "]",
-                    !getCollection().contains(elements[i]));
+            assertFalse("Empty collection shouldn't contain element[" + i + "]", getCollection().contains(elements[i]));
         }
         // make sure calls to "contains" don't change anything
         verify();
@@ -672,8 +672,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         resetFull();
         elements = getOtherElements();
         for (final Object element : elements) {
-            assertTrue("Full collection shouldn't contain element",
-                    !getCollection().contains(element));
+            assertFalse("Full collection shouldn't contain element", getCollection().contains(element));
         }
     }
 
@@ -686,14 +685,13 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         assertTrue("Every Collection should contain all elements of an " +
                 "empty Collection.", getCollection().containsAll(col));
         col.addAll(Arrays.asList(getOtherElements()));
-        assertTrue("Empty Collection shouldn't contain all elements of " +
-                "a non-empty Collection.", !getCollection().containsAll(col));
+        assertFalse("Empty Collection shouldn't contain all elements of " +
+                "a non-empty Collection.", getCollection().containsAll(col));
         // make sure calls to "containsAll" don't change anything
         verify();
 
         resetFull();
-        assertTrue("Full collection shouldn't contain other elements",
-                !getCollection().containsAll(col));
+        assertFalse("Full collection shouldn't contain other elements", getCollection().containsAll(col));
 
         col.clear();
         col.addAll(Arrays.asList(getFullElements()));
@@ -727,12 +725,12 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
      */
     public void testCollectionIsEmpty() {
         resetEmpty();
-        assertEquals("New Collection should be empty.", true, getCollection().isEmpty());
+        assertTrue("New Collection should be empty.", getCollection().isEmpty());
         // make sure calls to "isEmpty() don't change anything
         verify();
 
         resetFull();
-        assertEquals("Full collection shouldn't be empty", false, getCollection().isEmpty());
+        assertFalse("Full collection shouldn't be empty", getCollection().isEmpty());
         // make sure calls to "isEmpty() don't change anything
         verify();
     }
@@ -743,7 +741,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
     public void testCollectionIterator() {
         resetEmpty();
         Iterator<E> it1 = getCollection().iterator();
-        assertEquals("Iterator for empty Collection shouldn't have next.", false, it1.hasNext());
+        assertFalse("Iterator for empty Collection shouldn't have next.", it1.hasNext());
         try {
             it1.next();
             fail("Iterator at end of Collection should throw "
@@ -760,7 +758,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
             assertTrue("Iterator for full collection should haveNext", it1.hasNext());
             it1.next();
         }
-        assertTrue("Iterator should be finished", !it1.hasNext());
+        assertFalse("Iterator should be finished", it1.hasNext());
 
         final ArrayList<E> list = new ArrayList<>();
         it1 = getCollection().iterator();
@@ -870,7 +868,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
 
         resetFull();
         for (final E element : other) {
-            assertTrue("Shouldn't remove nonexistent other element", !getCollection().remove(element));
+            assertFalse("Shouldn't remove nonexistent other element", getCollection().remove(element));
             verify();
         }
 
@@ -915,12 +913,10 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         verify();
 
         resetFull();
-        assertTrue("Full collection removeAll should return false for empty input",
-                   !getCollection().removeAll(Collections.EMPTY_SET));
+        assertFalse("Full collection removeAll should return false for empty input", getCollection().removeAll(Collections.EMPTY_SET));
         verify();
 
-        assertTrue("Full collection removeAll should return false for other elements",
-                   !getCollection().removeAll(Arrays.asList(getOtherElements())));
+        assertFalse("Full collection removeAll should return false for other elements", getCollection().removeAll(Arrays.asList(getOtherElements())));
         verify();
 
         assertTrue("Full collection removeAll should return true for full elements",
@@ -940,8 +936,52 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
 
         assertTrue("Collection should shrink after removeAll", getCollection().size() < size);
         for (final E element : all) {
-            assertTrue("Collection shouldn't contain removed element", !getCollection().contains(element));
+            assertFalse("Collection shouldn't contain removed element", getCollection().contains(element));
         }
+    }
+
+    /**
+     *  Tests {@link Collection#removeIf(Predicate)}.
+     * @since 4.4
+     */
+    public void testCollectionRemoveIf() {
+        if (!isRemoveSupported()) {
+            return;
+        }
+
+        resetEmpty();
+        assertFalse("Empty collection removeIf should return false for a predicate that returns only false", getCollection().removeIf(e -> false));
+        verify();
+
+        assertFalse("Empty collection removeIf should return false for a predicate that returns only true", getCollection().removeIf(e -> true));
+        verify();
+
+        resetFull();
+        assertFalse("Full collection removeIf should return false for a predicate that returns only false", getCollection().removeIf(e -> false));
+        verify();
+
+        assertTrue("Full collection removeIf should return true for a predicate that returns only true",
+                getCollection().removeIf(e -> true));
+        getConfirmed().removeIf(e -> true);
+        verify();
+
+        resetFull();
+        final List<E> elements = Arrays.asList(getFullElements());
+
+        final int mid = getFullElements().length / 2;
+        final E target = elements.get(mid);
+
+        final int size = getCollection().size();
+        final int targetCount = Collections.frequency(elements, target);
+
+        final Predicate<E> filter = e -> target.equals(e);
+
+        assertTrue("Full collection removeIf should work", getCollection().removeIf(filter));
+        getConfirmed().removeIf(filter);
+        verify();
+
+        assertEquals("Collection should shrink after removeIf", getCollection().size(), size - targetCount);
+        assertFalse("Collection shouldn't contain removed element", getCollection().contains(target));
     }
 
     /**
@@ -956,11 +996,10 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         final List<E> elements = Arrays.asList(getFullElements());
         final List<E> other = Arrays.asList(getOtherElements());
 
-        assertTrue("Empty retainAll() should return false",
-                !getCollection().retainAll(Collections.EMPTY_SET));
+        assertFalse("Empty retainAll() should return false", getCollection().retainAll(Collections.EMPTY_SET));
         verify();
 
-        assertTrue("Empty retainAll() should return false", !getCollection().retainAll(elements));
+        assertFalse("Empty retainAll() should return false", getCollection().retainAll(elements));
         verify();
 
         resetFull();
@@ -976,8 +1015,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
 
         resetFull();
         int size = getCollection().size();
-        assertTrue("Collection shouldn't change from retainAll elements",
-                   !getCollection().retainAll(elements));
+        assertFalse("Collection shouldn't change from retainAll elements", getCollection().retainAll(elements));
         verify();
         assertEquals("Collection size shouldn't change", size, getCollection().size());
 
@@ -999,8 +1037,8 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         resetFull();
         final HashSet<E> set = new HashSet<>(elements);
         size = getCollection().size();
-        assertTrue("Collection shouldn't change from retainAll without " +
-                   "duplicate elements", !getCollection().retainAll(set));
+        assertFalse("Collection shouldn't change from retainAll without " +
+                "duplicate elements", getCollection().retainAll(set));
         verify();
         assertEquals("Collection size didn't change from nonduplicate " +
                      "retainAll", size, getCollection().size());
@@ -1045,8 +1083,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
                 if (matched[j]) {
                     continue;
                 }
-                if (array[i] == confirmedArray[j]
-                        || array[i] != null && array[i].equals(confirmedArray[j])) {
+                if (Objects.equals(array[i], confirmedArray[j])) {
                     matched[j] = true;
                     match = true;
                     break;
@@ -1058,8 +1095,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
             }
         }
         for (final boolean element : matched) {
-            assertEquals("Collection should return all its elements in " + "toArray", true,
-                    element);
+            assertTrue("Collection should return all its elements in " + "toArray", element);
         }
     }
 
@@ -1084,7 +1120,8 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         verify();
 
         try {
-            array = getCollection().toArray(null);
+            // Casting to Object[] allows compilation on Java 11.
+            array = getCollection().toArray((Object[]) null);
             fail("toArray(null) should raise NPE");
         } catch (final NullPointerException e) {
             // expected
@@ -1121,14 +1158,14 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
     }
 
     /**
-     *  Tests <code>toString</code> on a collection.
+     *  Tests {@code toString} on a collection.
      */
     public void testCollectionToString() {
         resetEmpty();
-        assertTrue("toString shouldn't return null", getCollection().toString() != null);
+        assertNotNull("toString shouldn't return null", getCollection().toString());
 
         resetFull();
-        assertTrue("toString shouldn't return null", getCollection().toString() != null);
+        assertNotNull("toString shouldn't return null", getCollection().toString());
     }
 
     /**
@@ -1152,6 +1189,14 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         try {
             getCollection().remove(null);
             fail("remove should raise UnsupportedOperationException");
+        } catch (final UnsupportedOperationException e) {
+            // expected
+        }
+        verify();
+
+        try {
+            getCollection().removeIf(e -> true);
+            fail("removeIf should raise UnsupportedOperationException");
         } catch (final UnsupportedOperationException e) {
             // expected
         }
@@ -1250,7 +1295,17 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         resetFull();
         try {
             final Iterator<E> iter = getCollection().iterator();
-            final List<E> sublist = Arrays.asList(getFullElements()).subList(2,5);
+            getCollection().removeIf(e -> false);
+            iter.next();
+            fail("next after removeIf should raise ConcurrentModification");
+        } catch (final ConcurrentModificationException e) {
+            // expected
+        }
+
+        resetFull();
+        try {
+            final Iterator<E> iter = getCollection().iterator();
+            final List<E> sublist = Arrays.asList(getFullElements()).subList(2, 5);
             getCollection().removeAll(sublist);
             iter.next();
             fail("next after removeAll should raise ConcurrentModification");
@@ -1261,7 +1316,7 @@ public abstract class AbstractCollectionTest<E> extends AbstractObjectTest {
         resetFull();
         try {
             final Iterator<E> iter = getCollection().iterator();
-            final List<E> sublist = Arrays.asList(getFullElements()).subList(2,5);
+            final List<E> sublist = Arrays.asList(getFullElements()).subList(2, 5);
             getCollection().retainAll(sublist);
             iter.next();
             fail("next after retainAll should raise ConcurrentModification");

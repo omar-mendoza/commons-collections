@@ -16,13 +16,16 @@
  */
 package org.apache.commons.collections4.list;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.iterators.AbstractIteratorDecorator;
@@ -30,20 +33,23 @@ import org.apache.commons.collections4.iterators.AbstractListIteratorDecorator;
 import org.apache.commons.collections4.set.UnmodifiableSet;
 
 /**
- * Decorates a <code>List</code> to ensure that no duplicates are present much
- * like a <code>Set</code>.
+ * Decorates a {@code List} to ensure that no duplicates are present much
+ * like a {@code Set}.
  * <p>
- * The <code>List</code> interface makes certain assumptions/requirements. This
+ * The {@code List} interface makes certain assumptions/requirements. This
  * implementation breaks these in certain ways, but this is merely the result of
  * rejecting duplicates. Each violation is explained in the method, but it
  * should not affect you. Bear in mind that Sets require immutable objects to
  * function correctly.
+ * </p>
  * <p>
  * The {@link org.apache.commons.collections4.set.ListOrderedSet ListOrderedSet}
  * class provides an alternative approach, by wrapping an existing Set and
  * retaining insertion order in the iterator.
+ * </p>
  * <p>
  * This class is Serializable from Commons Collections 3.1.
+ * </p>
  *
  * @since 3.0
  */
@@ -59,7 +65,7 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * Factory method to create a SetList using the supplied list to retain order.
      * <p>
      * If the list contains duplicates, these are removed (first indexed one
-     * kept). A <code>HashSet</code> is used for the set behaviour.
+     * kept). A {@code HashSet} is used for the set behavior.
      *
      * @param <E>  the element type
      * @param list  the list to decorate, must not be null
@@ -68,9 +74,7 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * @since 4.0
      */
     public static <E> SetUniqueList<E> setUniqueList(final List<E> list) {
-        if (list == null) {
-            throw new NullPointerException("List must not be null");
-        }
+        Objects.requireNonNull(list, "list");
         if (list.isEmpty()) {
             return new SetUniqueList<>(list, new HashSet<E>());
         }
@@ -93,10 +97,7 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      */
     protected SetUniqueList(final List<E> list, final Set<E> set) {
         super(list);
-        if (set == null) {
-            throw new NullPointerException("Set must not be null");
-        }
-        this.set = set;
+        this.set = Objects.requireNonNull(set, "set");
     }
 
     // -----------------------------------------------------------------------
@@ -113,9 +114,9 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
     /**
      * Adds an element to the list if it is not already present.
      * <p>
-     * <i>(Violation)</i> The <code>List</code> interface requires that this
-     * method returns <code>true</code> always. However this class may return
-     * <code>false</code> because of the <code>Set</code> behaviour.
+     * <i>(Violation)</i> The {@code List} interface requires that this
+     * method returns {@code true} always. However this class may return
+     * {@code false} because of the {@code Set} behavior.
      *
      * @param object  the object to add
      * @return true if object was added
@@ -136,7 +137,7 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * Adds an element to a specific index in the list if it is not already
      * present.
      * <p>
-     * <i>(Violation)</i> The <code>List</code> interface makes the assumption
+     * <i>(Violation)</i> The {@code List} interface makes the assumption
      * that the element is always inserted. This may not happen with this
      * implementation.
      *
@@ -147,8 +148,8 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
     public void add(final int index, final E object) {
         // adds element if it is not contained already
         if (set.contains(object) == false) {
-            super.add(index, object);
             set.add(object);
+            super.add(index, object);
         }
     }
 
@@ -158,7 +159,7 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * Only elements that are not already in this list will be added, and
      * duplicates from the specified collection will be ignored.
      * <p>
-     * <i>(Violation)</i> The <code>List</code> interface makes the assumption
+     * <i>(Violation)</i> The {@code List} interface makes the assumption
      * that the elements are always inserted. This may not happen with this
      * implementation.
      *
@@ -177,7 +178,7 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * Only elements that are not already in this list will be added, and
      * duplicates from the specified collection will be ignored.
      * <p>
-     * <i>(Violation)</i> The <code>List</code> interface makes the assumption
+     * <i>(Violation)</i> The {@code List} interface makes the assumption
      * that the elements are always inserted. This may not happen with this
      * implementation.
      *
@@ -241,6 +242,16 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
         return result;
     }
 
+    /**
+     * @since 4.4
+     */
+    @Override
+    public boolean removeIf(final Predicate<? super E> filter) {
+        final boolean result = super.removeIf(filter);
+        set.removeIf(filter);
+        return result;
+    }
+
     @Override
     public boolean removeAll(final Collection<?> coll) {
         boolean result = false;
@@ -254,9 +265,9 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * {@inheritDoc}
      * <p>
      * This implementation iterates over the elements of this list, checking
-     * each element in turn to see if it's contained in <code>coll</code>.
+     * each element in turn to see if it's contained in {@code coll}.
      * If it's not contained, it's removed from this list. As a consequence,
-     * it is advised to use a collection type for <code>coll</code> that provides
+     * it is advised to use a collection type for {@code coll} that provides
      * a fast (e.g. O(1)) implementation of {@link Collection#contains(Object)}.
      */
     @Override
@@ -327,21 +338,20 @@ public class SetUniqueList<E> extends AbstractSerializableListDecorator<E> {
      * @return a new {@link Set} populated with all elements of the provided
      *   {@link List}
      */
-    @SuppressWarnings("unchecked")
     protected Set<E> createSetBasedOnList(final Set<E> set, final List<E> list) {
         Set<E> subSet;
         if (set.getClass().equals(HashSet.class)) {
             subSet = new HashSet<>(list.size());
         } else {
             try {
-                subSet = set.getClass().newInstance();
-            } catch (final InstantiationException ie) {
-                subSet = new HashSet<>();
-            } catch (final IllegalAccessException iae) {
+                subSet = set.getClass().getDeclaredConstructor(set.getClass()).newInstance(set);
+            } catch (final InstantiationException
+                    | IllegalAccessException
+                    | InvocationTargetException
+                    | NoSuchMethodException ie) {
                 subSet = new HashSet<>();
             }
         }
-        subSet.addAll(list);
         return subSet;
     }
 

@@ -40,14 +40,17 @@ import org.apache.commons.collections4.map.AbstractSortedMapDecorator;
  * Implementation of {@link BidiMap} that uses two {@link TreeMap} instances.
  * <p>
  * The setValue() method on iterators will succeed only if the new value being set is
- * not already in the bidimap.
+ * not already in the bidi map.
+ * </p>
  * <p>
  * When considering whether to use this class, the {@link TreeBidiMap} class should
  * also be considered. It implements the interface using a dedicated design, and does
  * not store each object twice, which can save on memory use.
+ * </p>
  * <p>
  * NOTE: From Commons Collections 3.1, all subclasses will use {@link TreeMap}
- * and the flawed <code>createMap</code> method is ignored.
+ * and the flawed {@code createMap} method is ignored.
+ * </p>
  *
  * @param <K> the type of the keys in this map
  * @param <V> the type of the values in this map
@@ -66,7 +69,7 @@ public class DualTreeBidiMap<K, V> extends AbstractDualBidiMap<K, V>
     private final Comparator<? super V> valueComparator;
 
     /**
-     * Creates an empty <code>DualTreeBidiMap</code>
+     * Creates an empty {@link DualTreeBidiMap}.
      */
     public DualTreeBidiMap() {
         super(new TreeMap<K, V>(), new TreeMap<V, K>());
@@ -75,8 +78,8 @@ public class DualTreeBidiMap<K, V> extends AbstractDualBidiMap<K, V>
     }
 
     /**
-     * Constructs a <code>DualTreeBidiMap</code> and copies the mappings from
-     * specified <code>Map</code>.
+     * Constructs a {@link DualTreeBidiMap} and copies the mappings from
+     * specified {@link Map}.
      *
      * @param map  the map whose mappings are to be placed in this map
      */
@@ -187,7 +190,7 @@ public class DualTreeBidiMap<K, V> extends AbstractDualBidiMap<K, V>
      * Obtains an ordered map iterator.
      * <p>
      * This implementation copies the elements to an ArrayList in order to
-     * provide the forward/backward behaviour.
+     * provide the forward/backward behavior.
      *
      * @return a new ordered map iterator
      */
@@ -378,7 +381,6 @@ public class DualTreeBidiMap<K, V> extends AbstractDualBidiMap<K, V>
             final V oldValue = parent.put(last.getKey(), value);
             // Map.Entry specifies that the behavior is undefined when the backing map
             // has been modified (as we did with the put), so we also set the value
-            // (especially needed for IBM JDK)
             last.setValue(value);
             return oldValue;
         }

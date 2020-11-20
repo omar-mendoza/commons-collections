@@ -16,6 +16,8 @@
  */
 package org.apache.commons.collections4.functors;
 
+import java.util.Objects;
+
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.Predicate;
 
@@ -27,6 +29,7 @@ import org.apache.commons.collections4.Predicate;
  * in order to prevent potential remote code execution exploits. Please refer to
  * <a href="https://issues.apache.org/jira/browse/COLLECTIONS-580">COLLECTIONS-580</a>
  * for more details.
+ * </p>
  *
  * @since 3.0
  */
@@ -46,23 +49,18 @@ public class WhileClosure<E> implements Closure<E> {
      * @param predicate  the predicate used to evaluate when the loop terminates, not null
      * @param closure  the closure the execute, not null
      * @param doLoop  true to act as a do-while loop, always executing the closure once
-     * @return the <code>while</code> closure
+     * @return the {@code while} closure
      * @throws NullPointerException if the predicate or closure is null
      */
     public static <E> Closure<E> whileClosure(final Predicate<? super E> predicate,
                                               final Closure<? super E> closure, final boolean doLoop) {
-        if (predicate == null) {
-            throw new NullPointerException("Predicate must not be null");
-        }
-        if (closure == null) {
-            throw new NullPointerException("Closure must not be null");
-        }
-        return new WhileClosure<>(predicate, closure, doLoop);
+        return new WhileClosure<>(Objects.requireNonNull(predicate, "predicate"),
+                Objects.requireNonNull(closure, "closure"), doLoop);
     }
 
     /**
      * Constructor that performs no validation.
-     * Use <code>whileClosure</code> if you want that.
+     * Use {@code whileClosure} if you want that.
      *
      * @param predicate  the predicate used to evaluate when the loop terminates, not null
      * @param closure  the closure the execute, not null

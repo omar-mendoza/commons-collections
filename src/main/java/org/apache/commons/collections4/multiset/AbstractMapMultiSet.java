@@ -34,6 +34,7 @@ import org.apache.commons.collections4.iterators.AbstractIteratorDecorator;
  * Subclasses specify a Map implementation to use as the internal storage. The
  * map will be used to map multiset elements to a number; the number represents the
  * number of occurrences of that element in the multiset.
+ * </p>
  *
  * @param <E> the type held in the multiset
  * @since 4.1
@@ -164,7 +165,7 @@ public abstract class AbstractMapMultiSet<E> extends AbstractMultiSet<E> {
          *
          * @param parent the parent multiset
          */
-        public MapBasedMultiSetIterator(final AbstractMapMultiSet<E> parent) {
+        MapBasedMultiSetIterator(final AbstractMapMultiSet<E> parent) {
             this.parent = parent;
             this.entryIterator = parent.map.entrySet().iterator();
             this.current = null;
@@ -265,6 +266,7 @@ public abstract class AbstractMapMultiSet<E> extends AbstractMultiSet<E> {
             } else {
                 map.remove(object);
                 size -= mut.value;
+                mut.value = 0;
             }
         }
         return oldCount;

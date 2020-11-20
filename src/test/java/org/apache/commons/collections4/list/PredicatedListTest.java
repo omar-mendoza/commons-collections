@@ -56,12 +56,7 @@ public class PredicatedListTest<E> extends AbstractListTest<E> {
 //--------------------------------------------------------------------
 
     protected Predicate<E> testPredicate =
-        new Predicate<E>() {
-            @Override
-            public boolean evaluate(final E o) {
-                return o instanceof String;
-            }
-        };
+        o -> o instanceof String;
 
     public List<E> makeTestList() {
         return decorateList(new ArrayList<E>(), testPredicate);
@@ -77,8 +72,7 @@ public class PredicatedListTest<E> extends AbstractListTest<E> {
         } catch (final IllegalArgumentException e) {
             // expected
         }
-        assertTrue("Collection shouldn't contain illegal element",
-         !list.contains(i));
+        assertTrue("Collection shouldn't contain illegal element", !list.contains(i));
     }
 
     @SuppressWarnings("unchecked")
@@ -95,14 +89,10 @@ public class PredicatedListTest<E> extends AbstractListTest<E> {
         } catch (final IllegalArgumentException e) {
             // expected
         }
-        assertTrue("List shouldn't contain illegal element",
-         !list.contains("one"));
-        assertTrue("List shouldn't contain illegal element",
-         !list.contains("two"));
-        assertTrue("List shouldn't contain illegal element",
-         !list.contains(Integer.valueOf(3)));
-        assertTrue("List shouldn't contain illegal element",
-         !list.contains("four"));
+        assertTrue("List shouldn't contain illegal element", !list.contains("one"));
+        assertTrue("List shouldn't contain illegal element", !list.contains("two"));
+        assertTrue("List shouldn't contain illegal element", !list.contains(Integer.valueOf(3)));
+        assertTrue("List shouldn't contain illegal element", !list.contains("four"));
     }
 
     @SuppressWarnings("unchecked")
@@ -124,15 +114,33 @@ public class PredicatedListTest<E> extends AbstractListTest<E> {
         elements.add((E) "one");
         elements.add((E) "two");
         elements.add((E) "three");
-        list.addAll(1,elements);
-        assertTrue("List should contain legal element",
-         list.contains("zero"));
-        assertTrue("List should contain legal element",
-         list.contains("one"));
-        assertTrue("List should contain legal element",
-         list.contains("two"));
-        assertTrue("List should contain legal element",
-         list.contains("three"));
+        list.addAll(1, elements);
+        assertTrue("List should contain legal element", list.contains("zero"));
+        assertTrue("List should contain legal element", list.contains("one"));
+        assertTrue("List should contain legal element", list.contains("two"));
+        assertTrue("List should contain legal element", list.contains("three"));
+    }
+
+    public void testSubList() {
+        final List<E> list = makeTestList();
+        list.add((E) "zero");
+        //subList without any element of list
+        List<E> subList = list.subList(0, 0);
+        assertNotNull(subList);
+        assertEquals(0, subList.size());
+
+        //subList with one element oif list
+        subList = list.subList(0, 1);
+        assertEquals(1, subList.size());
+
+        final List<E> elements = new ArrayList<>();
+        elements.add((E) "one");
+        elements.add((E) "two");
+        elements.add((E) "three");
+        list.addAll(1, elements);
+        //subList with all elements of list
+        subList = list.subList(0, list.size());
+        assertEquals(list.size(), subList.size());
     }
 
     @Override

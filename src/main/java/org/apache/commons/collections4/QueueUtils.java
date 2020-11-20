@@ -38,7 +38,7 @@ public class QueueUtils {
     public static final Queue EMPTY_QUEUE = UnmodifiableQueue.unmodifiableQueue(new LinkedList<>());
 
     /**
-     * <code>QueueUtils</code> should not normally be instantiated.
+     * {@code QueueUtils} should not normally be instantiated.
      */
     private QueueUtils() {}
 
@@ -113,7 +113,7 @@ public class QueueUtils {
      * method, as it is a backdoor for adding untransformed objects.
      * <p>
      * Existing entries in the specified queue will not be transformed.
-     * If you want that behaviour, see {@link TransformedQueue#transformedQueue}.
+     * If you want that behavior, see {@link TransformedQueue#transformedQueue}.
      *
      * @param <E> the type of the elements in the queue
      * @param queue  the queue to predicate, must not be null
@@ -127,7 +127,7 @@ public class QueueUtils {
     }
 
     /**
-     * Get an empty <code>Queue</code>.
+     * Get an empty {@code Queue}.
      *
      * @param <E> the type of the elements in the queue
      * @return an empty {@link Queue}

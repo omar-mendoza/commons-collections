@@ -14,15 +14,27 @@
 # limitations under the License.
 
 language: java
-sudo: false
-
+cache:
+  directories:
+    - $HOME/.m2
+matrix:
+  include:
+    - os: linux-ppc64le
+      jdk: openjdk8
+  allow_failures:
+    - jdk: openjdk-ea
 jdk:
-  - openjdk7
-  - oraclejdk8
-  - oraclejdk9
+  - oraclejdk11
+  - openjdk8
+  - openjdk11
+  - openjdk14  
+  - openjdk-ea
 
 script:
-  - mvn
+  - mvn -V
+  # japicmp requires a package
+  - mvn -V jar:jar japicmp:cmp -P japicmp
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report -Ptravis-jacoco
+  # jacoco will run in the main script. Include the profile to submit to coveralls.
+  - mvn -V jacoco:report coveralls:report -Ptravis-jacoco
